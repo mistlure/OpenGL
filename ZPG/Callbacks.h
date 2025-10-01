@@ -1,4 +1,6 @@
-﻿#pragma once
+﻿// Defines a set of GLFW callback functions that respond to user input and window events.
+
+#pragma once
 #ifndef CALLBACKS_H
 #define CALLBACKS_H
 
