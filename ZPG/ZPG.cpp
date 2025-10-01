@@ -1,10 +1,10 @@
-﻿//GLEW 
+﻿// GLEW 
 #include <GL/glew.h>
 
-//  GLFW
+// GLFW
 #include <GLFW/glfw3.h>
 
-//  GLM
+// GLM
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -17,6 +17,8 @@
 #include "Shader.h"
 #include "ShaderProgram.h"
 #include "Model.h"
+#include "DrawableObject.h"
+#include "Scene.h"
 
 float points[] = {
     // X,Y,Z            // R,G,B
@@ -174,8 +176,9 @@ int main(void)
 
 
     Model model(points, sizeof(points));
-
-
+    DrawableObject object(&shaderProgram, &model);
+    Scene scene;
+    scene.addObject(&object);
 
 
 
@@ -185,10 +188,7 @@ int main(void)
         // Clear color and depth buffer
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        shaderProgram.use();
-        
-        model.bind();
-        model.draw();
+        scene.drawAll();
 
         // Update other events like input handling
         glfwPollEvents();
