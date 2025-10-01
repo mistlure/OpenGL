@@ -16,6 +16,7 @@
 #include "Callbacks.h"
 #include "Shader.h"
 #include "ShaderProgram.h"
+#include "Model.h"
 
 float points[] = {
     // X,Y,Z            // R,G,B
@@ -160,30 +161,6 @@ int main(void)
 
 
 
-    // Vertex Buffer Object (VBO)
-    GLuint VBO = 0;
-    glGenBuffers(1, &VBO); // Generate the VBO
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(points), points, GL_STATIC_DRAW);
-
-
-
-    // Vertex Array Object (VAO)
-    GLuint VAO = 0;
-    glGenVertexArrays(1, &VAO); // Generate the VAO
-    glBindVertexArray(VAO); // Bind the VAO
-
-
-
-    glEnableVertexAttribArray(0); // Enable vertex attributes
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    // Index, Count, Type, Normalized, Size of vertex, Start
-    glEnableVertexAttribArray(0); // Enable vertex attributes 0
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid*)0);
-    glEnableVertexAttribArray(1); // Enable vertex attributes 1
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid*)(3 * sizeof(float)));
-
-
 
     Shader vertexShader(GL_VERTEX_SHADER, vertex_shader);
     Shader fragmentShader(GL_FRAGMENT_SHADER, fragment_shader);
@@ -193,15 +170,26 @@ int main(void)
 
 
 
+
+
+
+    Model model(points, sizeof(points));
+
+
+
+
+
+
     // Main rendering loop
     while (!glfwWindowShouldClose(window)) {
         // Clear color and depth buffer
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        shaderProgram.use();
 
-        glBindVertexArray(VAO);
-        // Draw triangles
-        glDrawArrays(GL_TRIANGLES, 0, 9); //Mode, First, Count
+        shaderProgram.use();
+        
+        model.bind();
+        model.draw();
+
         // Update other events like input handling
         glfwPollEvents();
         // Put the stuff we’ve been drawing onto the display
