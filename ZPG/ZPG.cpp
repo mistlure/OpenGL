@@ -39,8 +39,6 @@ float points[] = {
     -0.2f,  0.2f, 0.0f,   1.0f, 1.0f, 0.0f
 };
 
-
-
 const char* vertex_shader =
 "#version 330 core\n"
 "layout(location = 0) in vec3 vp;\n"
@@ -51,8 +49,6 @@ const char* vertex_shader =
 "    fragColor = color;\n"
 "}";
 
-
-
 const char* fragment_shader =
 "#version 330 core\n"
 "in vec3 fragColor;\n"
@@ -60,19 +56,13 @@ const char* fragment_shader =
 "void main () {\n"
 "    finalColor = vec4(fragColor, 1.0);\n"
 "}";
-/*
-const char* fragment_shader_ignorColor =
+
+const char* fragment_shaderIgnorColor =
 "#version 330 core\n"
 "out vec4 finalColor;\n"
 "void main () {\n"
 "    finalColor = vec4(0.2, 0.8, 0.4, 1.0);\n"
 "}";
-*/
-
-
-
-
-
 
 //GLM test                    (We'll use it later)
 
@@ -89,8 +79,6 @@ const char* fragment_shader_ignorColor =
 //glm::mat4 Model = glm::mat4(1.0f);
 //
 
-
-
 int main(void)
 {
     GLFWwindow* window;
@@ -101,8 +89,6 @@ int main(void)
         exit(EXIT_FAILURE);
     }
 
-
-
     /*
     //Version initialization
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -111,8 +97,6 @@ int main(void)
     glfwWindowHint(GLFW_OPENGL_PROFILE,
     GLFW_OPENGL_CORE_PROFILE);
     */
-
-
 
     window = glfwCreateWindow(1000, 800, "ZPG", NULL, NULL);
     if (!window)
@@ -123,8 +107,6 @@ int main(void)
 
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1);
-
-
 
     // Start GLEW extension handler
     glewExperimental = GL_TRUE;
@@ -139,30 +121,18 @@ int main(void)
     glfwGetVersion(&major, &minor, &revision);
     printf("Using GLFW %i.%i.%i\n", major, minor, revision);
 
-
-
     // Sets the key callback
     glfwSetKeyCallback(window, key_callback);
-
     glfwSetCursorPosCallback(window, cursor_callback);
-
     glfwSetMouseButtonCallback(window, button_callback);
-
     glfwSetWindowFocusCallback(window, window_focus_callback);
-
     glfwSetWindowIconifyCallback(window, window_iconify_callback);
-
     glfwSetWindowSizeCallback(window, window_size_callback);
-
-
 
     int width, height;
     glfwGetFramebufferSize(window, &width, &height);
     float ratio = width / (float)height;
     glViewport(0, 0, width, height);
-
-
-
 
     Shader vertexShader(GL_VERTEX_SHADER, vertex_shader);
     Shader fragmentShader(GL_FRAGMENT_SHADER, fragment_shader);
@@ -170,18 +140,10 @@ int main(void)
     ShaderProgram shaderProgram(vertexShader, fragmentShader);
     shaderProgram.use();
 
-
-
-
-
-
     Model model(points, sizeof(points));
     DrawableObject object(&shaderProgram, &model);
     Scene scene;
     scene.addObject(&object);
-
-
-
 
     // Main rendering loop
     while (!glfwWindowShouldClose(window)) {
