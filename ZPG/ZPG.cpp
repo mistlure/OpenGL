@@ -39,13 +39,15 @@ float points[] = {
     -0.2f,  0.2f, 0.0f,   1.0f, 1.0f, 0.0f
 };
 
+// Vertex shader with transformation
 const char* vertex_shader =
 "#version 330 core\n"
 "layout(location = 0) in vec3 vp;\n"
 "layout(location = 1) in vec3 color;\n"
+"uniform mat4 modelMatrix;\n"
 "out vec3 fragColor;\n"
 "void main () {\n"
-"    gl_Position = vec4(vp, 1.0);\n"
+"    gl_Position = modelMatrix * vec4(vp, 1.0);\n"
 "    fragColor = color;\n"
 "}";
 
@@ -64,6 +66,16 @@ const char* fragment_shaderIgnorColor =
 "    finalColor = vec4(0.2, 0.8, 0.4, 1.0);\n"
 "}";
 
+// Tranformation test
+/*const float a[] = {
+-0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+-0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f
+};*/
+
+
+
+
 //GLM test                    (We'll use it later)
 
 //// Projection matrix : 45� Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
@@ -78,6 +90,8 @@ const char* fragment_shaderIgnorColor =
 //// Model matrix : an identity matrix (model will be at the origin)
 //glm::mat4 Model = glm::mat4(1.0f);
 //
+
+
 
 int main(void)
 {
@@ -134,6 +148,8 @@ int main(void)
     float ratio = width / (float)height;
     glViewport(0, 0, width, height);
 
+
+
     Shader vertexShader(GL_VERTEX_SHADER, vertex_shader);
     Shader fragmentShader(GL_FRAGMENT_SHADER, fragment_shader);
 
@@ -145,10 +161,15 @@ int main(void)
     Scene scene;
     scene.addObject(&object);
 
+
+
     // Main rendering loop
     while (!glfwWindowShouldClose(window)) {
         // Clear color and depth buffer
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glm::mat4 M = glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
+        shaderProgram.setModelMatrix(M);
 
         scene.drawAll();
 

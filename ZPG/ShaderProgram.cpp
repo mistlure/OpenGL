@@ -52,6 +52,22 @@ void ShaderProgram::use()
     glUseProgram(id);
 }
 
+// Bridge between C++ and GLSL that passes transformation data.
+// It's universal and will be used for every object.
+void ShaderProgram::setModelMatrix(const glm::mat4& matrix)
+{
+	// Get the location of the "modelMatrix".
+    GLint location = glGetUniformLocation(id, "modelMatrix");
+	// Location -1 means that the uniform variable was not found or is not used in the shader.
+    if (location == -1)
+    {
+        std::cerr << "Uniform 'modelMatrix' not found!" << std::endl;
+        return;
+    }
+	// Upload the 4x4 matrix to the GPU.
+    glUniformMatrix4fv(location, 1, GL_FALSE, &matrix[0][0]);
+}
+
 // GLuint ShaderProgram::getID() const {
 //    return id;
 // }
