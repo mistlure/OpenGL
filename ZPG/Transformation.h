@@ -12,13 +12,13 @@ class Transformation {
 public:
     Transformation();
 
-    void setLocalTransform(const glm::mat4& transform);   // задаёт локальную матрицу
-    glm::mat4 getLocalTransform() const;                  // возвращает локальную матрицу
+    void setLocalTransform(const glm::mat4& transform);   
+    glm::mat4 getLocalTransform() const;                  
 
-    void setParent(Transformation* parent);               // устанавливает родителя
-    void addChild(Transformation* child);                 // добавляет дочерний узел
+    void setParent(Transformation* parent);               
+    void addChild(Transformation* child);                 
 
-    glm::mat4 getGlobalTransform() const;                 // возвращает итоговую матрицу с учётом родителей
+    glm::mat4 getGlobalTransform() const;                 
 
 private:
     glm::mat4 localTransform;

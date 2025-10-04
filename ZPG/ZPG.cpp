@@ -12,6 +12,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
+#include <vector>
 
 #include "Callbacks.h"
 #include "Shader.h"
@@ -19,6 +20,9 @@
 #include "Model.h"
 #include "DrawableObject.h"
 #include "Scene.h"
+
+std::vector<Scene*> scenes;
+int currentSceneIndex = 0;
 
 float points[] = {
     // X,Y,Z            // R,G,B
@@ -65,14 +69,6 @@ const char* fragment_shaderIgnorColor =
 "void main () {\n"
 "    finalColor = vec4(0.2, 0.8, 0.4, 1.0);\n"
 "}";
-
-// Tranformation test
-/*const float a[] = {
--0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
--0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
-0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f
-};*/
-
 
 
 
@@ -156,10 +152,10 @@ int main(void)
     ShaderProgram shaderProgram(vertexShader, fragmentShader);
     shaderProgram.use();
 
-    Model model(points, sizeof(points));
-    DrawableObject object(&shaderProgram, &model);
-    Scene scene;
-    scene.addObject(&object);
+    //Model model(points, sizeof(points));
+    //DrawableObject object(&shaderProgram, &model);
+    //Scene scene;
+    //scene.addObject(&object);
 
 
 
@@ -169,10 +165,18 @@ int main(void)
         // Clear color and depth buffer
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glm::mat4 M = glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
-        shaderProgram.setModelMatrix(M);
+        Scene* scene1 = new Scene();
+        Scene* scene2 = new Scene();
+        Scene* scene3 = new Scene();
 
-        scene.drawAll();
+        scenes.push_back(scene1);
+        scenes.push_back(scene2);
+        scenes.push_back(scene3);
+
+        scenes[currentSceneIndex]->drawAll();
+
+        //glm::mat4 M = glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
+        //shaderProgram.setModelMatrix(M);
 
         // Update other events like input handling
         glfwPollEvents();
