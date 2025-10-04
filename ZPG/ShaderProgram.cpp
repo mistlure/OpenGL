@@ -52,6 +52,8 @@ void ShaderProgram::use()
     glUseProgram(id);
 }
 
+
+
 // Bridge between C++ and GLSL that passes transformation data.
 // It's universal and will be used for every object.
 void ShaderProgram::setModelMatrix(const glm::mat4& matrix)
@@ -67,6 +69,46 @@ void ShaderProgram::setModelMatrix(const glm::mat4& matrix)
 	// Upload the 4x4 matrix to the GPU.
     glUniformMatrix4fv(location, 1, GL_FALSE, &matrix[0][0]);
 }
+
+
+
+// Passes a 4x4 matrix to a uniform variable in the shader.
+// Use for transformations like model, view, projection.
+void ShaderProgram::setUniform(const std::string& name, const glm::mat4& matrix)
+{
+    GLint location = glGetUniformLocation(id, name.c_str());
+    if (location != -1)
+        glUniformMatrix4fv(location, 1, GL_FALSE, &matrix[0][0]);
+}
+
+// Passes a vec3 to a uniform variable in the shader.
+// Use for colors, light directions, positions.
+void ShaderProgram::setUniform(const std::string& name, const glm::vec3& vector)
+{
+    GLint location = glGetUniformLocation(id, name.c_str());
+    if (location != -1)
+        glUniform3fv(location, 1, &vector[0]);
+}
+
+// Passes a float value to a uniform variable in the shader.
+// Use for time, animation speed, transparency, etc.
+void ShaderProgram::setUniform(const std::string& name, float value)
+{
+    GLint location = glGetUniformLocation(id, name.c_str());
+    if (location != -1)
+        glUniform1f(location, value);
+}
+
+// Passes an integer value to a uniform variable in the shader.
+// Use for mode switching, flags, texture indices.
+void ShaderProgram::setUniform(const std::string& name, int value)
+{
+    GLint location = glGetUniformLocation(id, name.c_str());
+    if (location != -1)
+        glUniform1i(location, value);
+}
+
+
 
 // GLuint ShaderProgram::getID() const {
 //    return id;
