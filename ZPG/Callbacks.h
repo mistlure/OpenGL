@@ -3,10 +3,13 @@
 #pragma once
 #ifndef CALLBACKS_H
 #define CALLBACKS_H
-
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
+#include "Scene.h"
 
-// GLFW
+#include <stdio.h>
+#include <vector>
+
 void error_callback(int error, const char* description);
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);

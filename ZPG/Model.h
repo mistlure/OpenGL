@@ -20,4 +20,7 @@ public:
 private:
     GLuint vao;
     GLuint vbo;
+
+    GLsizei vertexCount;
+
 };

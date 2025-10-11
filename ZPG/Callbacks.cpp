@@ -1,8 +1,4 @@
-#include "callbacks.h"
-#include "Scene.h"
-
-#include <stdio.h>
-#include <vector>
+﻿#include "callbacks.h"
 
 extern std::vector<Scene*> scenes;
 extern int currentSceneIndex;
@@ -16,8 +12,10 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GL_TRUE);
+
     printf("key_callback [%d,%d,%d,%d] \n", key, scancode, action, mods);
 
+	// Switch scenes with number keys 1-9
     if (action == GLFW_PRESS)
     {
         if (key >= GLFW_KEY_1 && key <= GLFW_KEY_9)

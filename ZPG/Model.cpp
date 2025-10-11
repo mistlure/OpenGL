@@ -1,4 +1,4 @@
-#include "Model.h"
+﻿#include "Model.h"
 
 Model::Model(float* data, size_t size)
 {
@@ -37,6 +37,8 @@ Model::Model(float* data, size_t size)
     // Define how attribute 1 is laid out in the buffer
     // It reads 3 floats starting at offset 3 * sizeof(float), same stride
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid*)(3 * sizeof(float)));
+
+    vertexCount = size / (6 * sizeof(float));
 }
 
 Model::~Model()
@@ -52,5 +54,5 @@ void Model::bind()
 
 void Model::draw()
 {
-    glDrawArrays(GL_TRIANGLES, 0, 9);
+    glDrawArrays(GL_TRIANGLES, 0, vertexCount);
 }
