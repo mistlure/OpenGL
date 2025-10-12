@@ -20,6 +20,7 @@
 #include "Model.h"
 #include "DrawableObject.h"
 #include "Scene.h"
+#include "Camera.h"
 
 #include "SphereData.h"
 
@@ -34,11 +35,14 @@ const char* vertex_shader =
 "layout(location = 0) in vec3 vp;\n"
 "layout(location = 1) in vec3 color;\n"
 "uniform mat4 modelMatrix;\n"
+"uniform mat4 viewMatrix;\n"
+"uniform mat4 projectMatrix;\n"
 "out vec3 fragColor;\n"
 "void main () {\n"
-"    gl_Position = modelMatrix * vec4(vp, 1.0);\n"
+"    gl_Position = projectMatrix * viewMatrix * modelMatrix * vec4(vp, 1.0);\n"
 "    fragColor = color;\n"
 "}";
+
 
 const char* fragment_shader =
 "#version 330 core\n"
@@ -47,6 +51,13 @@ const char* fragment_shader =
 "void main () {\n"
 "    finalColor = vec4(fragColor, 1.0);\n"
 "}";
+
+
+Camera camera;
+glm::vec3 cameraPos(0.0f, 0.0f, 5.0f);
+glm::vec3 cameraFront(0.0f, 0.0f, -1.0f);
+glm::vec3 cameraUp(0.0f, 1.0f, 0.0f);
+float cameraSpeed = 0.9f; // Было 0.05f
 
 
 
@@ -136,20 +147,17 @@ int main(void)
 
 
 
-
-
-
     float triangle[] = {
     -0.3f, -0.3f, 0.0f,  1.0f, 0.0f, 0.0f,
      0.3f, -0.3f, 0.0f,  0.0f, 1.0f, 0.0f,
      0.0f,  0.3f, 0.0f,  0.0f, 0.0f, 1.0f
     };
 
-	// Create models and drawable objects.
+    // Create models and drawable objects.
     Model* triangleModel = new Model(triangle, sizeof(triangle));
     DrawableObject* triangleObject = new DrawableObject(&shaderProgram, triangleModel);
 
-	// Create a transformation for the triangle.
+    // Create a transformation for the triangle.
     rotatingTriangle = new Transformation();
     triangleObject->transform = rotatingTriangle;
 
@@ -158,35 +166,49 @@ int main(void)
 
     scene1->addObject(triangleObject);
 
-	// Add objects to scenes.
+    // Add objects to scenes.
     scenes.push_back(scene1);
 
 
 
+    float cameraAngle = 0.0f;
+    float cameraRadius = 5.0f;
+    glm::vec3 cameraTarget(0.0f, 0.0f, 0.0f);
+
+    ///
+    camera.setPosition(glm::vec3(0.0f, 0.0f, 5.0f));
+    camera.lookAt(glm::vec3(0.0f, 0.0f, 0.0f));
+    camera.setPerspective(45.0f, ratio, 0.1f, 100.0f);
+
+    shaderProgram.setUniform("viewMatrix", camera.getViewMatrix());
+    shaderProgram.setUniform("projectMatrix", camera.getProjectionMatrix());
+    ///
+
     // Main rendering loop
     while (!glfwWindowShouldClose(window))
     {
-        // Clear color and depth buffer
+        // Очистка экрана
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        if (currentSceneIndex == 0 && rotatingTriangle) {
-            float time = (float)glfwGetTime();
-            glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), time, glm::vec3(0.0f, 0.0f, 1.0f));
-            rotatingTriangle->setLocalTransform(rotation);
-        }
+        // Треугольник статичен
+        rotatingTriangle->setLocalTransform(glm::scale(glm::mat4(1.0f), glm::vec3(2.0f)));
+
+
+        // Обновление камеры
+        camera.setPosition(cameraPos);
+        camera.lookAt(cameraPos + cameraFront, cameraUp);
+        shaderProgram.setUniform("viewMatrix", camera.getViewMatrix());
+        std::cout << "Camera position: " << cameraPos.x << ", " << cameraPos.y << ", " << cameraPos.z << std::endl;
+
+        // Отрисовка сцены
         scenes[currentSceneIndex]->drawAll();
 
-        //glm::mat4 M = glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
-        //shaderProgram.setModelMatrix(M);
-
-        // Update other events like input handling
+        // Обработка событий
         glfwPollEvents();
-        // Put the stuff we’ve been drawing onto the display
         glfwSwapBuffers(window);
+
     }
-
     glfwDestroyWindow(window);
-
     glfwTerminate();
     exit(EXIT_SUCCESS);
 }

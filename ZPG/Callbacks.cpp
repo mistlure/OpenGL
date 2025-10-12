@@ -3,6 +3,11 @@
 extern std::vector<Scene*> scenes;
 extern int currentSceneIndex;
 
+extern glm::vec3 cameraPos;
+extern glm::vec3 cameraFront;
+extern glm::vec3 cameraUp;
+extern float cameraSpeed;
+
 void error_callback(int error, const char* description)
 {
     fputs(description, stderr);
@@ -27,6 +32,17 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
                 printf("Switched to scene %d\n", index + 1);
             }
         }
+    }
+    if (action == GLFW_PRESS || action == GLFW_REPEAT)
+    {
+        if (key == GLFW_KEY_W)
+            cameraPos += cameraSpeed * cameraFront;
+        if (key == GLFW_KEY_S)
+            cameraPos -= cameraSpeed * cameraFront;
+        if (key == GLFW_KEY_A)
+            cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+        if (key == GLFW_KEY_D)
+            cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
     }
 }
 
