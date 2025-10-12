@@ -7,8 +7,9 @@
 #include <glm/glm.hpp>
 
 #include "Shader.h"
+#include "CameraObserver.h"
 
-class ShaderProgram
+class ShaderProgram : public ICameraObserver
 {
 public:
     ShaderProgram(const Shader& vertex, const Shader& fragment);
@@ -23,8 +24,7 @@ public:
     void setUniform(const std::string& name, float value);
     void setUniform(const std::string& name, int value);
     
-    // GLuint getID() const;
-
+    void onCameraUpdated(const glm::mat4& viewMatrix) override;
 private:
     GLuint id;
 };

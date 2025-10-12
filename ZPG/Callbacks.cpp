@@ -12,7 +12,9 @@ extern float cameraSpeed;
 extern float yaw;
 extern float pitch;
 
-void updateCameraFront() {
+// Update the camera's front vector based on the current yaw angle.
+void updateCameraFront()
+{
     glm::vec3 direction;
     direction.x = cos(glm::radians(yaw));
     direction.y = 0.0f;

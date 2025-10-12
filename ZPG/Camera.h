@@ -1,8 +1,15 @@
+// Class representing a camera in 3D space, with position, view, and projection matrices.
+
 #pragma once
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-class Camera {
+#include "CameraObserver.h"
+
+#include <vector>
+
+class Camera
+{
 public:
     Camera();
 
@@ -14,8 +21,13 @@ public:
     const glm::mat4& getViewMatrix() const;
     const glm::mat4& getProjectionMatrix() const;
 
+    void addObserver(ICameraObserver* observer);
+    void notifyObservers();
+
 private:
     glm::vec3 position;
     glm::mat4 viewMatrix;
     glm::mat4 projectionMatrix;
+
+    std::vector<ICameraObserver*> observers;
 };

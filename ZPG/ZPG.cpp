@@ -23,6 +23,8 @@
 #include "Camera.h"
 
 #include "SphereData.h"
+#include "TreeData.h"
+#include "BushData.h"
 
 std::vector<Scene*> scenes;
 int currentSceneIndex = 0;
@@ -43,7 +45,6 @@ const char* vertex_shader =
 "    fragColor = color;\n"
 "}";
 
-
 const char* fragment_shader =
 "#version 330 core\n"
 "in vec3 fragColor;\n"
@@ -52,7 +53,7 @@ const char* fragment_shader =
 "    finalColor = vec4(fragColor, 1.0);\n"
 "}";
 
-
+// Camera global setup.
 Camera camera;
 glm::vec3 cameraPos(0.0f, 0.0f, 5.0f);
 glm::vec3 cameraFront(0.0f, 0.0f, -1.0f);
@@ -61,8 +62,6 @@ float cameraSpeed = 0.1f;
 
 float yaw = -90.0f;
 float pitch = 0.0f;
-
-
 
 //GLM test                    (We'll use it later)
 
@@ -78,8 +77,6 @@ float pitch = 0.0f;
 //// Model matrix : an identity matrix (model will be at the origin)
 //glm::mat4 Model = glm::mat4(1.0f);
 //
-
-
 
 int main(void)
 {
@@ -138,21 +135,19 @@ int main(void)
 
 
 
+    ///
+
     Shader vertexShader(GL_VERTEX_SHADER, vertex_shader);
     Shader fragmentShader(GL_FRAGMENT_SHADER, fragment_shader);
-
-
 
     ShaderProgram shaderProgram(vertexShader, fragmentShader);
     shaderProgram.use();
 
-
-
-
+    camera.addObserver(&shaderProgram);
 
     float triangle[] = {
     -0.3f, -0.3f, 0.0f,  1.0f, 0.0f, 0.0f,
-     0.3f, -0.3f, 0.0f,  0.0f, 1.0f, 0.0f,
+     0.3f, -0.3f, -0.5f,  0.0f, 1.0f, 0.0f,
      0.0f,  0.3f, 0.0f,  0.0f, 0.0f, 1.0f
     };
 
@@ -167,49 +162,83 @@ int main(void)
     // Scenes
     Scene* scene1 = new Scene();
 
+	// Add the triangle to the scene.
     scene1->addObject(triangleObject);
 
     // Add objects to scenes.
     scenes.push_back(scene1);
 
-
-
+	// Camera setup.
     float cameraAngle = 0.0f;
     float cameraRadius = 5.0f;
     glm::vec3 cameraTarget(0.0f, 0.0f, 0.0f);
 
-    ///
     camera.setPosition(glm::vec3(0.0f, 0.0f, 5.0f));
     camera.lookAt(glm::vec3(0.0f, 0.0f, 0.0f));
     camera.setPerspective(45.0f, ratio, 0.1f, 100.0f);
 
-    shaderProgram.setUniform("viewMatrix", camera.getViewMatrix());
+    //shaderProgram.setUniform("viewMatrix", camera.getViewMatrix());
     shaderProgram.setUniform("projectMatrix", camera.getProjectionMatrix());
+
     ///
+
+
+
+    ///
+    
+    Scene* scene2 = new Scene();
+
+    Model* treeModel = new Model(tree, treeSize);
+    Model* bushModel = new Model(bush, bushSize);
+
+    for (int i = 0; i < 50; ++i) {
+        float x = ((rand() % 200) - 100) / 10.0f; // от -10 до +10
+        float z = ((rand() % 200) - 100) / 10.0f;
+        Transformation* transform = new Transformation();
+        transform->setLocalTransform(glm::translate(glm::mat4(1.0f), glm::vec3(x, 0.0f, z)));
+
+        DrawableObject* treeObject = new DrawableObject(&shaderProgram, treeModel);
+        treeObject->transform = transform;
+        scene2->addObject(treeObject);
+    }
+
+    for (int i = 0; i < 50; ++i) {
+        float x = ((rand() % 200) - 100) / 10.0f;
+        float z = ((rand() % 200) - 100) / 10.0f;
+        Transformation* transform = new Transformation();
+        transform->setLocalTransform(glm::translate(glm::mat4(1.0f), glm::vec3(x, 0.0f, z)));
+
+        DrawableObject* bushObject = new DrawableObject(&shaderProgram, bushModel);
+        bushObject->transform = transform;
+        scene2->addObject(bushObject);
+    }
+
+    scenes.push_back(scene2);
+
+    ///
+
+
+
+	// Enable depth test.
+    glEnable(GL_DEPTH_TEST);
 
     // Main rendering loop
     while (!glfwWindowShouldClose(window))
     {
-        // Очистка экрана
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // Треугольник статичен
+		// Static triangle transformation (for testing).
         rotatingTriangle->setLocalTransform(glm::scale(glm::mat4(1.0f), glm::vec3(2.0f)));
 
-
-        // Обновление камеры
+		// Camera control.
         camera.setPosition(cameraPos);
         camera.lookAt(cameraPos + cameraFront, cameraUp);
-        shaderProgram.setUniform("viewMatrix", camera.getViewMatrix());
-        //std::cout << "Camera position: " << cameraPos.x << ", " << cameraPos.y << ", " << cameraPos.z << std::endl;
 
-        // Отрисовка сцены
+		// Draw the current scene.
         scenes[currentSceneIndex]->drawAll();
 
-        // Обработка событий
         glfwPollEvents();
         glfwSwapBuffers(window);
-
     }
     glfwDestroyWindow(window);
     glfwTerminate();

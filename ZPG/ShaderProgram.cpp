@@ -1,5 +1,4 @@
 #include "ShaderProgram.h"
-//#include "Shader.h"
 #include <iostream>
 
 // Constructor that links vertex and fragment shaders into a shader program
@@ -109,7 +108,8 @@ void ShaderProgram::setUniform(const std::string& name, int value)
 }
 
 
-
-// GLuint ShaderProgram::getID() const {
-//    return id;
-// }
+// Implementation of the ICameraObserver interface method.
+void ShaderProgram::onCameraUpdated(const glm::mat4& viewMatrix)
+{
+    setUniform("viewMatrix", viewMatrix);
+}
