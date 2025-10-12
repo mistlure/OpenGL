@@ -57,7 +57,10 @@ Camera camera;
 glm::vec3 cameraPos(0.0f, 0.0f, 5.0f);
 glm::vec3 cameraFront(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp(0.0f, 1.0f, 0.0f);
-float cameraSpeed = 0.9f; // Было 0.05f
+float cameraSpeed = 0.1f;
+
+float yaw = -90.0f;
+float pitch = 0.0f;
 
 
 
@@ -198,7 +201,7 @@ int main(void)
         camera.setPosition(cameraPos);
         camera.lookAt(cameraPos + cameraFront, cameraUp);
         shaderProgram.setUniform("viewMatrix", camera.getViewMatrix());
-        std::cout << "Camera position: " << cameraPos.x << ", " << cameraPos.y << ", " << cameraPos.z << std::endl;
+        //std::cout << "Camera position: " << cameraPos.x << ", " << cameraPos.y << ", " << cameraPos.z << std::endl;
 
         // Отрисовка сцены
         scenes[currentSceneIndex]->drawAll();

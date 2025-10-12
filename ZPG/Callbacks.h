@@ -24,4 +24,6 @@ void cursor_callback(GLFWwindow* window, double x, double y);
 
 void button_callback(GLFWwindow* window, int button, int action, int mode);
 
+void updateCameraFront();
+
 #endif // CALLBACKS_H
