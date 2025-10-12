@@ -1,4 +1,4 @@
-// Model represents a 3D object�s geometry in OpenGL.
+﻿// Model represents a 3D object’s geometry in OpenGL.
 // 
 // It stores vertex data in GPU memory using a VBO and configures ->
 // -> how that data is interpreted using a VAO.
