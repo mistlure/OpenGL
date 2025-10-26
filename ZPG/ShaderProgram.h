@@ -25,6 +25,8 @@ public:
     void setUniform(const std::string& name, int value);
     
     void onCameraUpdated(const glm::mat4& viewMatrix) override;
+
+    void setLightPosition(const glm::vec3& position);
 private:
     GLuint id;
 };

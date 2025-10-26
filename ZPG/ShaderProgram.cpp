@@ -1,4 +1,4 @@
-#include "ShaderProgram.h"
+﻿#include "ShaderProgram.h"
 #include <iostream>
 
 // Constructor that links vertex and fragment shaders into a shader program
@@ -112,4 +112,11 @@ void ShaderProgram::setUniform(const std::string& name, int value)
 void ShaderProgram::onCameraUpdated(const glm::mat4& viewMatrix)
 {
     setUniform("viewMatrix", viewMatrix);
+}
+
+
+
+void ShaderProgram::setLightPosition(const glm::vec3& position)
+{
+	setUniform("lightPos", position); //uniform name in shader.
 }

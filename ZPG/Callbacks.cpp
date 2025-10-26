@@ -1,104 +1,71 @@
 ﻿#include "callbacks.h"
+#include "SceneManager.h"
+
 #include <iostream>
 
-extern std::vector<Scene*> scenes;
-extern int currentSceneIndex;
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
-extern glm::vec3 cameraPos;
-extern glm::vec3 cameraFront;
-extern glm::vec3 cameraUp;
-extern float cameraSpeed;
+static CameraController* controller = nullptr;
 
-extern float yaw;
-extern float pitch;
-
-// Update the camera's front vector based on the current yaw angle.
-void updateCameraFront()
-{
-    glm::vec3 direction;
-    direction.x = cos(glm::radians(yaw));
-    direction.y = 0.0f;
-    direction.z = sin(glm::radians(yaw));
-    cameraFront = glm::normalize(direction);
+void setCameraController(CameraController* c) {
+    controller = c;
 }
 
-void error_callback(int error, const char* description)
-{
+void error_callback(int error, const char* description) {
     fputs(description, stderr);
 }
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GL_TRUE);
 
-    printf("key_callback [%d,%d,%d,%d] \n", key, scancode, action, mods);
-
-	// Switch scenes with number keys 1-9
-    if (action == GLFW_PRESS)
-    {
-        if (key >= GLFW_KEY_1 && key <= GLFW_KEY_9)
-        {
+    if (action == GLFW_PRESS) {
+        if (key >= GLFW_KEY_1 && key <= GLFW_KEY_9) {
             int index = key - GLFW_KEY_1;
-            if (index < scenes.size())
-            {
-                currentSceneIndex = index;
-                printf("Switched to scene %d\n", index + 1);
-            }
+            SceneManager::get().setCurrent(index);
+            std::cout << "Switched to scene " << index << std::endl;
         }
     }
-    if (action == GLFW_PRESS || action == GLFW_REPEAT)
-    {
-        if (key == GLFW_KEY_W) 
-        {
-            cameraPos += cameraSpeed * cameraFront;
-            std::cout << "Camera position: " << cameraPos.x << ", " << cameraPos.y << ", " << cameraPos.z << std::endl;
-        }
+
+    if ((action == GLFW_PRESS || action == GLFW_REPEAT) && controller) {
+        if (key == GLFW_KEY_W)
+            controller->position += controller->speed * controller->front;
         if (key == GLFW_KEY_S)
-            cameraPos -= cameraSpeed * cameraFront;
+            controller->position -= controller->speed * controller->front;
         if (key == GLFW_KEY_A)
-            cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+            controller->position -= glm::normalize(glm::cross(controller->front, controller->up)) * controller->speed;
         if (key == GLFW_KEY_D)
-            cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+            controller->position += glm::normalize(glm::cross(controller->front, controller->up)) * controller->speed;
     }
 }
 
-void window_focus_callback(GLFWwindow* window, int focused)
-{
-    printf("window_focus_callback \n");
+void button_callback(GLFWwindow* window, int button, int action, int mods) {
+    if (action == GLFW_PRESS && controller) {
+        if (button == GLFW_MOUSE_BUTTON_LEFT) {
+            controller->yaw -= 5.0f;
+            controller->updateDirection();
+        }
+        else if (button == GLFW_MOUSE_BUTTON_RIGHT) {
+            controller->yaw += 5.0f;
+            controller->updateDirection();
+        }
+    }
 }
 
-void window_iconify_callback(GLFWwindow* window, int iconified)
-{
-    printf("window_iconify_callback \n");
+void window_focus_callback(GLFWwindow* window, int focused) {
+    printf("window_focus_callback\n");
 }
 
-void window_size_callback(GLFWwindow* window, int width, int height)
-{
-    printf("resize %d, %d \n", width, height);
+void window_iconify_callback(GLFWwindow* window, int iconified) {
+    printf("window_iconify_callback\n");
+}
+
+void window_size_callback(GLFWwindow* window, int width, int height) {
+    printf("resize %d, %d\n", width, height);
     glViewport(0, 0, width, height);
 }
 
-void cursor_callback(GLFWwindow* window, double x, double y)
-{
-    printf("cursor_callback \n");
-}
-
-void button_callback(GLFWwindow* window, int button, int action, int mods)
-{
-    if (action == GLFW_PRESS)
-    {
-        if (button == GLFW_MOUSE_BUTTON_LEFT)
-        {
-            yaw -= 5.0f;
-            updateCameraFront();
-            printf("Rotated camera left to yaw = %.2f\n", yaw);
-        }
-        else if (button == GLFW_MOUSE_BUTTON_RIGHT)
-        {
-            yaw += 5.0f;
-            updateCameraFront();
-            printf("Rotated camera right to yaw = %.2f\n", yaw);
-        }
-    }
+void cursor_callback(GLFWwindow* window, double x, double y) {
+    printf("cursor_callback\n");
 }

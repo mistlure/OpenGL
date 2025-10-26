@@ -1,5 +1,7 @@
-#include "Shader.h"
+﻿#include "Shader.h"
 #include <iostream>
+#include <fstream>
+#include <sstream>
 
 Shader::Shader(GLenum type, const std::string& source)
 {
@@ -43,6 +45,11 @@ Shader::Shader(GLenum type, const std::string& source)
     }
 }
 
+/*Shader::Shader(GLenum type, const char* filepath)
+{
+    createShaderFromFile(type, filepath);
+}*/
+
 Shader::~Shader()
 {
     glDeleteShader(id);
@@ -53,3 +60,37 @@ Shader::~Shader()
 //    return id;
 //}
 
+void Shader::createShader(GLenum shaderType, const char* shaderCode)
+{
+    id = glCreateShader(shaderType);
+    glShaderSource(id, 1, &shaderCode, nullptr);
+    glCompileShader(id);
+
+    GLint success;
+    glGetShaderiv(id, GL_COMPILE_STATUS, &success);
+    if (!success)
+    {
+        GLint logLength;
+        glGetShaderiv(id, GL_INFO_LOG_LENGTH, &logLength);
+        char* log = new char[logLength];
+        glGetShaderInfoLog(id, logLength, nullptr, log);
+        std::cerr << "Shader compilation failed:\n" << log << std::endl;
+        delete[] log;
+    }
+}
+
+void Shader::createShaderFromFile(GLenum shaderType, const char* shaderFile)
+{
+    std::ifstream file(shaderFile);
+    if (!file.is_open())
+    {
+        std::cerr << "Unable to open shader file: " << shaderFile << std::endl;
+        exit(-1);
+    }
+
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    std::string shaderCode = buffer.str();
+
+    createShader(shaderType, shaderCode.c_str());
+}

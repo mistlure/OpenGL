@@ -17,10 +17,15 @@ class Shader
     friend class ShaderProgram;
 public:
     Shader(GLenum type, const std::string& source);
+    //Shader(GLenum type, const char* filepath);
     ~Shader();
+
 
     // GLuint getID() const;
 
 private:
     GLuint id;
+
+    void createShader(GLenum shaderType, const char* shaderCode);
+    void createShaderFromFile(GLenum shaderType, const char* shaderFile);
 };
