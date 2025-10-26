@@ -99,8 +99,9 @@ void Application::setupApp() {
     shaderProgram->use();
 
     Light light(glm::vec3(0.0f, 0.0f, 0.0f));
-    shaderProgram->setLightPosition(light.getPosition());
-    shaderProgram->setUniform("lightPos", light.getPosition());
+    light.addObserver(shaderProgram);
+    //shaderProgram->setLightPosition(light.getPosition());
+    //shaderProgram->setUniform("lightPos", light.getPosition());
     shaderProgram->setUniform("viewPos", cameraController.position);
 
     camera.addObserver(shaderProgram);

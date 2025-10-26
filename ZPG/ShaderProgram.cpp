@@ -113,7 +113,9 @@ void ShaderProgram::onCameraUpdated(const glm::mat4& viewMatrix)
 {
     setUniform("viewMatrix", viewMatrix);
 }
-
+void ShaderProgram::onLightUpdated(const glm::vec3& position) {
+    setUniform("lightPos", position);
+}
 
 
 void ShaderProgram::setLightPosition(const glm::vec3& position)

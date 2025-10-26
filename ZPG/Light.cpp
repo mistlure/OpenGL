@@ -13,3 +13,12 @@ const glm::vec3& Light::getPosition() const
 {
     return position;
 }
+
+void Light::addObserver(ILightObserver* observer) {
+    observers.push_back(observer);
+}
+
+void Light::notifyObservers() {
+    for (auto o : observers)
+        o->onLightUpdated(position);
+}

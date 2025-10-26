@@ -8,8 +8,9 @@
 
 #include "Shader.h"
 #include "CameraObserver.h"
+#include "ILightObserver.h"
 
-class ShaderProgram : public ICameraObserver
+class ShaderProgram : public ICameraObserver, public ILightObserver
 {
 public:
     ShaderProgram(const Shader& vertex, const Shader& fragment);
@@ -25,6 +26,7 @@ public:
     void setUniform(const std::string& name, int value);
     
     void onCameraUpdated(const glm::mat4& viewMatrix) override;
+    void onLightUpdated(const glm::vec3& position) override;
 
     void setLightPosition(const glm::vec3& position);
 private:
