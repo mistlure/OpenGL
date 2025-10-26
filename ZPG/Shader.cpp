@@ -45,10 +45,10 @@ Shader::Shader(GLenum type, const std::string& source)
     }
 }
 
-/*Shader::Shader(GLenum type, const char* filepath)
+Shader::Shader(GLenum type, const char* filepath)
 {
     createShaderFromFile(type, filepath);
-}*/
+}
 
 Shader::~Shader()
 {

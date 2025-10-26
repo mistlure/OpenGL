@@ -17,7 +17,7 @@ class Shader
     friend class ShaderProgram;
 public:
     Shader(GLenum type, const std::string& source);
-    //Shader(GLenum type, const char* filepath);
+    Shader(GLenum type, const char* filepath);
     ~Shader();
 
 
