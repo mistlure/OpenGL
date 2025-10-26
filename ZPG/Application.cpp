@@ -56,17 +56,12 @@ void Application::initGLEW() {
 }
 
 void Application::setupApp() {
-
     Shader vertexShader(GL_VERTEX_SHADER, "shaders/vertex.glsl");
-    Shader fragmentShader(GL_FRAGMENT_SHADER, "shaders/fragment.glsl");
+    Shader fragmentShader(GL_FRAGMENT_SHADER, "shaders/fragment_multiLight.glsl");
 
     shaderProgram = new ShaderProgram(vertexShader, fragmentShader);
     shaderProgram->use();
 
-    Light light(glm::vec3(0.0f, 0.0f, 0.0f));
-    light.addObserver(shaderProgram);
-    //shaderProgram->setLightPosition(light.getPosition());
-    //shaderProgram->setUniform("lightPos", light.getPosition());
     shaderProgram->setUniform("viewPos", cameraController.position);
 
     camera.addObserver(shaderProgram);
@@ -93,6 +88,8 @@ void Application::setupApp() {
     Scene* scene2 = new Scene();
     Model* treeModel = new Model(tree, treeSize);
     Model* bushModel = new Model(bush, bushSize);
+    Model* sphereModel = new Model(sphere, sphereSize);
+
     for (int i = 0; i < 50; ++i) {
         float x = ((rand() % 200) - 100) / 10.0f;
         float z = ((rand() % 200) - 100) / 10.0f;
@@ -102,6 +99,7 @@ void Application::setupApp() {
         obj->transform = t;
         scene2->addObject(obj);
     }
+
     for (int i = 0; i < 50; ++i) {
         float x = ((rand() % 200) - 100) / 10.0f;
         float z = ((rand() % 200) - 100) / 10.0f;
@@ -111,11 +109,32 @@ void Application::setupApp() {
         obj->transform = t;
         scene2->addObject(obj);
     }
+
+    for (int i = 0; i < 8; ++i) {
+        float x = ((rand() % 200) - 100) / 10.0f;
+        float y = ((rand() % 100)) / 10.0f + 1.0f;
+        float z = ((rand() % 200) - 100) / 10.0f;
+
+        glm::vec3 pos(x, y, z);
+        lightPositions.push_back(pos);
+        lightAttenuations.push_back(glm::vec3(0.8f, 0.4f, 0.2f));
+
+        Transformation* t = new Transformation();
+        t->setLocalTransform(glm::translate(glm::mat4(1.0f), pos) *
+            glm::scale(glm::mat4(1.0f), glm::vec3(0.2f)));
+        fireflyTransforms.push_back(t);
+
+        DrawableObject* firefly = new DrawableObject(shaderProgram, sphereModel);
+        firefly->transform = t;
+        scene2->addObject(firefly);
+    }
+
+    shaderProgram->setLightPositions(lightPositions);
+    shaderProgram->setLightAttenuations(lightAttenuations);
     scenes.push_back(scene2);
 
     // Scene 3 — spheres
     Scene* scene3 = new Scene();
-    Model* sphereModel = new Model(sphere, sphereSize);
     glm::vec3 positions[] = {
         glm::vec3(0.0f,  2.0f, 0.0f),
         glm::vec3(0.0f, -2.0f, 0.0f),
@@ -158,7 +177,6 @@ void Application::setupApp() {
     scenes.push_back(solarScene);
 
     SceneManager::get().setScenes(scenes);
-
     glEnable(GL_DEPTH_TEST);
 }
 
@@ -166,12 +184,12 @@ void Application::mainLoop() {
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        rotatingTriangle->setLocalTransform(glm::scale(glm::mat4(1.0f), glm::vec3(2.0f)));
         camera.setPosition(cameraController.position);
         cameraController.updateDirection();
 
-        float time = static_cast<float>(glfwGetTime());
+        rotatingTriangle->setLocalTransform(glm::scale(glm::mat4(1.0f), glm::vec3(2.0f)));
 
+        float time = static_cast<float>(glfwGetTime());
         if (currentSceneIndex == 3) {
             earth->setLocalTransform(glm::rotate(glm::mat4(1.0f), time, glm::vec3(0, 1, 0)) *
                 glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 0.0f, 0.0f)) *
@@ -184,12 +202,24 @@ void Application::mainLoop() {
             sun->setLocalTransform(glm::scale(glm::mat4(1.0f), glm::vec3(2.0f)));
         }
 
+        for (int i = 0; i < lightPositions.size(); ++i) {
+            lightPositions[i].x += sin(time + lightPositions[i].x) * 0.01f;
+            lightPositions[i].z += cos(time + lightPositions[i].z) * 0.01f;
+
+            fireflyTransforms[i]->setLocalTransform(glm::translate(glm::mat4(1.0f), lightPositions[i]) *
+                glm::scale(glm::mat4(1.0f), glm::vec3(0.2f)));
+        }
+        shaderProgram->setLightPositions(lightPositions);
+
+        std::cout << "Firefly[0] = " << lightPositions[0].x << ", " << lightPositions[0].z << std::endl;
+
         SceneManager::get().getCurrent()->drawAll();
 
         glfwPollEvents();
         glfwSwapBuffers(window);
     }
 }
+
 
 void Application::cleanup() {
     glfwDestroyWindow(window);

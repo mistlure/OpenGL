@@ -43,4 +43,8 @@ private:
     Transformation* sun = nullptr;
     Transformation* earth = nullptr;
     Transformation* moon = nullptr;
+
+    std::vector<glm::vec3> lightPositions;
+    std::vector<glm::vec3> lightAttenuations;
+    std::vector<Transformation*> fireflyTransforms;
 };

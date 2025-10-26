@@ -122,3 +122,21 @@ void ShaderProgram::setLightPosition(const glm::vec3& position)
 {
 	setUniform("lightPos", position); //uniform name in shader.
 }
+void ShaderProgram::setLightPositions(const std::vector<glm::vec3>& positions) {
+    GLint location = glGetUniformLocation(id, "lightPositions");
+    if (location == -1) {
+        std::cerr << "Uniform 'lightPositions' not found!" << std::endl;
+        return;
+    }
+    glUniform3fv(location, static_cast<GLsizei>(positions.size()), &positions[0][0]);
+}
+
+// Sets an array of light attenuation values in the shader.
+void ShaderProgram::setLightAttenuations(const std::vector<glm::vec3>& values) {
+    GLint location = glGetUniformLocation(id, "lightAttenuations");
+    if (location == -1) {
+        std::cerr << "Uniform 'lightAttenuations' not found!" << std::endl;
+        return;
+    }
+    glUniform3fv(location, static_cast<GLsizei>(values.size()), &values[0][0]);
+}

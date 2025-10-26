@@ -10,6 +10,9 @@
 #include "CameraObserver.h"
 #include "ILightObserver.h"
 
+#include <vector>
+#include <string>
+
 class ShaderProgram : public ICameraObserver, public ILightObserver
 {
 public:
@@ -29,6 +32,9 @@ public:
     void onLightUpdated(const glm::vec3& position) override;
 
     void setLightPosition(const glm::vec3& position);
+    void setLightPositions(const std::vector<glm::vec3>& positions);
+
+    void setLightAttenuations(const std::vector<glm::vec3>& values);
 private:
     GLuint id;
 };
