@@ -7,8 +7,6 @@ ShaderProgram::ShaderProgram(const Shader& vertex, const Shader& fragment)
     // Create a new shader program object
     id = glCreateProgram();
 
-
-
     // Attach the compiled vertex&fragment shaders to the program
     // Safe access to internal shader ID
     glAttachShader(id, vertex.id);
@@ -16,13 +14,9 @@ ShaderProgram::ShaderProgram(const Shader& vertex, const Shader& fragment)
     // Combine vertex + fragment into one executable
     glLinkProgram(id);
 
-
-
     // Check if the linking was successful
     GLint success;
     glGetProgramiv(id, GL_LINK_STATUS, &success);
-
-
 
 	// Failure test
     if (!success)
@@ -46,16 +40,15 @@ ShaderProgram::~ShaderProgram()
     glDeleteProgram(id);
 }
 
-void ShaderProgram::use()
+// Activate the shader program for rendering
+void ShaderProgram::use() const
 {
     glUseProgram(id);
 }
 
-
-
 // Bridge between C++ and GLSL that passes transformation data.
 // It's universal and will be used for every object.
-void ShaderProgram::setModelMatrix(const glm::mat4& matrix)
+void ShaderProgram::setModelMatrix(const glm::mat4& matrix) const
 {
 	// Get the location of the "modelMatrix".
     GLint location = glGetUniformLocation(id, "modelMatrix");
@@ -69,11 +62,9 @@ void ShaderProgram::setModelMatrix(const glm::mat4& matrix)
     glUniformMatrix4fv(location, 1, GL_FALSE, &matrix[0][0]);
 }
 
-
-
 // Passes a 4x4 matrix to a uniform variable in the shader.
 // Use for transformations like model, view, projection.
-void ShaderProgram::setUniform(const std::string& name, const glm::mat4& matrix)
+void ShaderProgram::setUniform(const std::string& name, const glm::mat4& matrix) const
 {
     GLint location = glGetUniformLocation(id, name.c_str());
     if (location != -1)
@@ -82,7 +73,7 @@ void ShaderProgram::setUniform(const std::string& name, const glm::mat4& matrix)
 
 // Passes a vec3 to a uniform variable in the shader.
 // Use for colors, light directions, positions.
-void ShaderProgram::setUniform(const std::string& name, const glm::vec3& vector)
+void ShaderProgram::setUniform(const std::string& name, const glm::vec3& vector) const
 {
     GLint location = glGetUniformLocation(id, name.c_str());
     if (location != -1)
@@ -91,7 +82,7 @@ void ShaderProgram::setUniform(const std::string& name, const glm::vec3& vector)
 
 // Passes a float value to a uniform variable in the shader.
 // Use for time, animation speed, transparency, etc.
-void ShaderProgram::setUniform(const std::string& name, float value)
+void ShaderProgram::setUniform(const std::string& name, float value) const
 {
     GLint location = glGetUniformLocation(id, name.c_str());
     if (location != -1)
@@ -100,31 +91,39 @@ void ShaderProgram::setUniform(const std::string& name, float value)
 
 // Passes an integer value to a uniform variable in the shader.
 // Use for mode switching, flags, texture indices.
-void ShaderProgram::setUniform(const std::string& name, int value)
+void ShaderProgram::setUniform(const std::string& name, int value) const
 {
     GLint location = glGetUniformLocation(id, name.c_str());
     if (location != -1)
         glUniform1i(location, value);
 }
 
-
 // Implementation of the ICameraObserver interface method.
+// Updates the view matrix in the shader when notified.
 void ShaderProgram::onCameraUpdated(const glm::mat4& viewMatrix)
 {
     setUniform("viewMatrix", viewMatrix);
 }
-void ShaderProgram::onLightUpdated(const glm::vec3& position) {
+
+// Implementation of the ILightObserver interface method.
+// Updates the light position in the shader when notified.
+void ShaderProgram::onLightUpdated(const glm::vec3& position)
+{
     setUniform("lightPos", position);
 }
 
-
+// Sets the position of a single light source in the shader.
 void ShaderProgram::setLightPosition(const glm::vec3& position)
 {
-	setUniform("lightPos", position); //uniform name in shader.
+	setUniform("lightPos", position);
 }
-void ShaderProgram::setLightPositions(const std::vector<glm::vec3>& positions) {
+
+// Sets an array of light positions in the shader.
+void ShaderProgram::setLightPositions(const std::vector<glm::vec3>& positions)
+{
     GLint location = glGetUniformLocation(id, "lightPositions");
-    if (location == -1) {
+    if (location == -1)
+    {
         std::cerr << "Uniform 'lightPositions' not found!" << std::endl;
         return;
     }
@@ -132,9 +131,11 @@ void ShaderProgram::setLightPositions(const std::vector<glm::vec3>& positions) {
 }
 
 // Sets an array of light attenuation values in the shader.
-void ShaderProgram::setLightAttenuations(const std::vector<glm::vec3>& values) {
+void ShaderProgram::setLightAttenuations(const std::vector<glm::vec3>& values)
+{
     GLint location = glGetUniformLocation(id, "lightAttenuations");
-    if (location == -1) {
+    if (location == -1)
+    {
         std::cerr << "Uniform 'lightAttenuations' not found!" << std::endl;
         return;
     }

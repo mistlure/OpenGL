@@ -1,3 +1,5 @@
+// Interface for observing camera updates, such as changes in view matrix.
+
 #pragma once
 #include <glm/glm.hpp>
 

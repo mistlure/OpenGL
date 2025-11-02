@@ -15,6 +15,7 @@
 #include "Transformation.h"
 #include "CameraController.h"
 #include "SceneManager.h"
+#include "Transform.h"
 
 class Application {
 public:
@@ -39,12 +40,13 @@ private:
     std::vector<Scene*> scenes;
     int currentSceneIndex = 0;
 
-    Transformation* rotatingTriangle = nullptr;
-    Transformation* sun = nullptr;
-    Transformation* earth = nullptr;
-    Transformation* moon = nullptr;
+    Transform* rotatingTriangle;
+    Transform* sun;
+    Transform* earth;
+    Transform* moon;
+    std::vector<Transform*> fireflyTransforms;
 
     std::vector<glm::vec3> lightPositions;
     std::vector<glm::vec3> lightAttenuations;
-    std::vector<Transformation*> fireflyTransforms;
+    //std::vector<Transformation*> fireflyTransforms;
 };

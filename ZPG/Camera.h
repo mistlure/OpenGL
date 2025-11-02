@@ -1,10 +1,13 @@
+// This class represents a simple camera with position, view, and projection matrices.
+
 #pragma once
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
 #include "CameraObserver.h"
 
-class Camera {
+class Camera
+{
 public:
     Camera();
 

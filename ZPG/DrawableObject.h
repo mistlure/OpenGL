@@ -9,6 +9,7 @@
 #include "ShaderProgram.h"
 #include "Model.h"
 #include "Transformation.h"
+#include "Transform.h"
 
 class DrawableObject
 {
@@ -16,7 +17,8 @@ public:
     DrawableObject(ShaderProgram* shader, Model* model);
     void draw();
 
-    Transformation* transform = nullptr;
+    //Transformation* transform = nullptr;
+    Transform* transform = nullptr;
 
 private:
     ShaderProgram* shader;

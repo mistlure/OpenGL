@@ -19,14 +19,14 @@ public:
     ShaderProgram(const Shader& vertex, const Shader& fragment);
     ~ShaderProgram();
 
-    void use();
+    void use() const;
 
-    void setModelMatrix(const glm::mat4& matrix);
+    void setModelMatrix(const glm::mat4& matrix) const;
 
-    void setUniform(const std::string& name, const glm::mat4& matrix);
-    void setUniform(const std::string& name, const glm::vec3& vector);
-    void setUniform(const std::string& name, float value);
-    void setUniform(const std::string& name, int value);
+    void setUniform(const std::string& name, const glm::mat4& matrix) const;
+    void setUniform(const std::string& name, const glm::vec3& vector) const;
+    void setUniform(const std::string& name, float value) const;
+    void setUniform(const std::string& name, int value) const;
     
     void onCameraUpdated(const glm::mat4& viewMatrix) override;
     void onLightUpdated(const glm::vec3& position) override;

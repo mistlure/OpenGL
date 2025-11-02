@@ -47,12 +47,20 @@ Model::~Model()
     glDeleteVertexArrays(1, &vao);
 }
 
-void Model::bind()
+// Binds the model's VAO for rendering
+void Model::bind() const
 {
     glBindVertexArray(vao);
 }
 
-void Model::draw()
+// Unbinds any VAO to prevent accidental modification
+void Model::unbind() const
+{
+    glBindVertexArray(0);
+}
+
+// Draws the model using the stored vertex count
+void Model::draw() const
 {
     glDrawArrays(GL_TRIANGLES, 0, vertexCount);
 }

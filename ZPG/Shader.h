@@ -15,13 +15,11 @@ class Shader
 {
 	// Allow ShaderProgram to access private members.
     friend class ShaderProgram;
+
 public:
     Shader(GLenum type, const std::string& source);
     Shader(GLenum type, const char* filepath);
     ~Shader();
-
-
-    // GLuint getID() const;
 
 private:
     GLuint id;

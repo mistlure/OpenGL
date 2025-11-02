@@ -14,13 +14,13 @@ public:
     Model(float* data, size_t size);
     ~Model();
 
-    void bind();
-    void draw();
+    void bind() const;
+	void unbind() const;
+    void draw() const;
 
 private:
     GLuint vao;
     GLuint vbo;
 
     GLsizei vertexCount;
-
 };

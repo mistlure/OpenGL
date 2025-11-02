@@ -11,7 +11,7 @@ void DrawableObject::draw()
     // Bind the model's VAO
     model->bind();
     if (transform)
-        shader->setModelMatrix(transform->getGlobalTransform());
+        shader->setModelMatrix(transform->getMatrix());
     // Draw call
     model->draw();
 }

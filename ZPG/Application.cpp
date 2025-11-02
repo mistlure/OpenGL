@@ -4,6 +4,12 @@
 #include "TreeData.h"
 #include "BushData.h"
 
+#include "Transform.h"
+#include "Rotate.h"
+#include "Translate.h"
+#include "Scale.h"
+#include "DynamicRotate.h"
+
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 #include <stdlib.h>
@@ -62,6 +68,9 @@ void Application::setupApp() {
     shaderProgram = new ShaderProgram(vertexShader, fragmentShader);
     shaderProgram->use();
 
+    Light light(glm::vec3(0.0f, 5.0f, 5.0f));
+    shaderProgram->setLightPosition(light.getPosition());
+    shaderProgram->setUniform("lightPos", light.getPosition());
     shaderProgram->setUniform("viewPos", cameraController.position);
 
     camera.addObserver(shaderProgram);
@@ -78,7 +87,8 @@ void Application::setupApp() {
     };
     Model* triangleModel = new Model(triangle, sizeof(triangle));
     DrawableObject* triangleObject = new DrawableObject(shaderProgram, triangleModel);
-    rotatingTriangle = new Transformation();
+    rotatingTriangle = new Transform();
+    rotatingTriangle->addTransform(new Rotate(glm::radians(45.0f), glm::vec3(0, 1, 0)));
     triangleObject->transform = rotatingTriangle;
     Scene* scene1 = new Scene();
     scene1->addObject(triangleObject);
@@ -93,8 +103,8 @@ void Application::setupApp() {
     for (int i = 0; i < 50; ++i) {
         float x = ((rand() % 200) - 100) / 10.0f;
         float z = ((rand() % 200) - 100) / 10.0f;
-        Transformation* t = new Transformation();
-        t->setLocalTransform(glm::translate(glm::mat4(1.0f), glm::vec3(x, 0.0f, z)));
+        Transform* t = new Transform();
+        t->addTransform(new Translate(glm::vec3(x, 0.0f, z)));
         DrawableObject* obj = new DrawableObject(shaderProgram, treeModel);
         obj->transform = t;
         scene2->addObject(obj);
@@ -103,8 +113,8 @@ void Application::setupApp() {
     for (int i = 0; i < 50; ++i) {
         float x = ((rand() % 200) - 100) / 10.0f;
         float z = ((rand() % 200) - 100) / 10.0f;
-        Transformation* t = new Transformation();
-        t->setLocalTransform(glm::translate(glm::mat4(1.0f), glm::vec3(x, 0.0f, z)));
+        Transform* t = new Transform();
+        t->addTransform(new Translate(glm::vec3(x, 0.0f, z)));
         DrawableObject* obj = new DrawableObject(shaderProgram, bushModel);
         obj->transform = t;
         scene2->addObject(obj);
@@ -114,14 +124,14 @@ void Application::setupApp() {
         float x = ((rand() % 200) - 100) / 10.0f;
         float y = ((rand() % 100)) / 10.0f + 1.0f;
         float z = ((rand() % 200) - 100) / 10.0f;
-
         glm::vec3 pos(x, y, z);
+
         lightPositions.push_back(pos);
         lightAttenuations.push_back(glm::vec3(0.8f, 0.4f, 0.2f));
 
-        Transformation* t = new Transformation();
-        t->setLocalTransform(glm::translate(glm::mat4(1.0f), pos) *
-            glm::scale(glm::mat4(1.0f), glm::vec3(0.2f)));
+        Transform* t = new Transform();
+        t->addTransform(new Translate(pos));
+        t->addTransform(new Scale(glm::vec3(0.2f)));
         fireflyTransforms.push_back(t);
 
         DrawableObject* firefly = new DrawableObject(shaderProgram, sphereModel);
@@ -142,8 +152,8 @@ void Application::setupApp() {
         glm::vec3(2.0f, 0.0f, 0.0f)
     };
     for (int i = 0; i < 4; ++i) {
-        Transformation* t = new Transformation();
-        t->setLocalTransform(glm::translate(glm::mat4(1.0f), positions[i]));
+        Transform* t = new Transform();
+        t->addTransform(new Translate(positions[i]));
         DrawableObject* obj = new DrawableObject(shaderProgram, sphereModel);
         obj->transform = t;
         scene3->addObject(obj);
@@ -152,16 +162,15 @@ void Application::setupApp() {
 
     // Scene 4 — solar system
     Scene* solarScene = new Scene();
-    sun = new Transformation();
-    earth = new Transformation();
-    moon = new Transformation();
+    sun = new Transform();
+    earth = new Transform();
+    moon = new Transform();
 
-    sun->setLocalTransform(glm::scale(glm::mat4(1.0f), glm::vec3(2.0f)));
-    earth->setLocalTransform(glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)));
-    moon->setLocalTransform(glm::scale(glm::mat4(1.0f), glm::vec3(0.5f)));
-
-    earth->setParent(sun);
-    moon->setParent(earth);
+    sun->addTransform(new Scale(glm::vec3(2.0f)));
+    earth->addTransform(new Translate(glm::vec3(3.0f, 0.0f, 0.0f)));
+    earth->addTransform(new Scale(glm::vec3(1.0f)));
+    moon->addTransform(new Translate(glm::vec3(1.0f, 0.0f, 0.0f)));
+    moon->addTransform(new Scale(glm::vec3(0.5f)));
 
     DrawableObject* sunObj = new DrawableObject(shaderProgram, sphereModel);
     DrawableObject* earthObj = new DrawableObject(shaderProgram, sphereModel);
@@ -180,6 +189,7 @@ void Application::setupApp() {
     glEnable(GL_DEPTH_TEST);
 }
 
+
 void Application::mainLoop() {
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -187,31 +197,48 @@ void Application::mainLoop() {
         camera.setPosition(cameraController.position);
         cameraController.updateDirection();
 
-        rotatingTriangle->setLocalTransform(glm::scale(glm::mat4(1.0f), glm::vec3(2.0f)));
+        // Обновляем трансформацию вращающегося треугольника
+        rotatingTriangle->clearTransforms();
+        rotatingTriangle->addTransform(new Scale(glm::vec3(2.0f)));
 
         float time = static_cast<float>(glfwGetTime());
+
         if (currentSceneIndex == 3) {
-            earth->setLocalTransform(glm::rotate(glm::mat4(1.0f), time, glm::vec3(0, 1, 0)) *
-                glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 0.0f, 0.0f)) *
-                glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)));
+            // Земля вращается вокруг солнца
+            earth->clearTransforms();
+            earth->addTransform(new Rotate(time, glm::vec3(0, 1, 0)));
+            earth->addTransform(new Translate(glm::vec3(3.0f, 0.0f, 0.0f)));
+            earth->addTransform(new Scale(glm::vec3(1.0f)));
 
-            moon->setLocalTransform(glm::rotate(glm::mat4(1.0f), time * 2.0f, glm::vec3(0, 1, 0)) *
-                glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 0.0f, 0.0f)) *
-                glm::scale(glm::mat4(1.0f), glm::vec3(0.5f)));
+            // Луна вращается вокруг земли
+            moon->clearTransforms();
+            moon->addTransform(new Rotate(time * 2.0f, glm::vec3(0, 1, 0)));
+            moon->addTransform(new Translate(glm::vec3(1.0f, 0.0f, 0.0f)));
+            moon->addTransform(new Scale(glm::vec3(0.5f)));
 
-            sun->setLocalTransform(glm::scale(glm::mat4(1.0f), glm::vec3(2.0f)));
+            // Солнце остаётся на месте, но масштабируется
+            sun->clearTransforms();
+            sun->addTransform(new Scale(glm::vec3(2.0f)));
         }
 
-        for (int i = 0; i < lightPositions.size(); ++i) {
-            lightPositions[i].x += sin(time + lightPositions[i].x) * 0.01f;
-            lightPositions[i].z += cos(time + lightPositions[i].z) * 0.01f;
-
-            fireflyTransforms[i]->setLocalTransform(glm::translate(glm::mat4(1.0f), lightPositions[i]) *
-                glm::scale(glm::mat4(1.0f), glm::vec3(0.2f)));
-        }
-        shaderProgram->setLightPositions(lightPositions);
+        shaderProgram->setUniform("lightPos", glm::vec3(0.0f, 5.0f, 5.0f));
 
         std::cout << "Firefly[0] = " << lightPositions[0].x << ", " << lightPositions[0].z << std::endl;
+
+        if (currentSceneIndex == 1) {
+            for (int i = 0; i < fireflyTransforms.size(); ++i) {
+                float t = time;
+                glm::mat4 old = fireflyTransforms[i]->getMatrix();
+                glm::vec3 pos = glm::vec3(old[3]);
+
+                pos.x += sin(t + pos.x) * 0.01f;
+                pos.z += cos(t + pos.z) * 0.01f;
+
+                fireflyTransforms[i]->clearTransforms();
+                fireflyTransforms[i]->addTransform(new Translate(pos));
+                fireflyTransforms[i]->addTransform(new Scale(glm::vec3(0.2f)));
+            }
+        }
 
         SceneManager::get().getCurrent()->drawAll();
 
@@ -219,6 +246,7 @@ void Application::mainLoop() {
         glfwSwapBuffers(window);
     }
 }
+
 
 
 void Application::cleanup() {

@@ -15,7 +15,8 @@ class Scene
 {
 public:
     void addObject(DrawableObject* obj);
-    void drawAll();
+    void drawAll() const;
+    void clear();
 
 private:
     std::vector<DrawableObject*> objects;
