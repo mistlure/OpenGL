@@ -14,6 +14,9 @@
 #include <iostream>
 #include <stdlib.h>
 
+//#include "ObjLoader.h"
+//#include "Libraries/tinyobjloader/tiny_obj_loader.h"
+
 void Application::run() {
     initGLFW();
     initWindow();
@@ -78,6 +81,9 @@ void Application::setupApp() {
     cameraController.updateDirection();
     camera.setPerspective(45.0f, ratio, 0.1f, 100.0f);
     shaderProgram->setUniform("projectMatrix", camera.getProjectionMatrix());
+
+    shaderProgram->setUniform("ambientColor", glm::vec3(0.25f));
+    shaderProgram->setUniform("ambientStrength", 0.1f);
 
     // Scene 1 — rotating triangle
     float triangle[] = {
