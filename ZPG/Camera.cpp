@@ -8,7 +8,7 @@ Camera::Camera()
 void Camera::setPosition(const glm::vec3& pos)
 {
     position = pos;
-    notify(viewMatrix);
+    notify(SCamera);
 
 }
 
@@ -16,7 +16,7 @@ void Camera::setPosition(const glm::vec3& pos)
 void Camera::lookAt(const glm::vec3& target, const glm::vec3& up)
 {
     viewMatrix = glm::lookAt(position, target, up);
-    notify(viewMatrix);
+    notify(SCamera);
 
 }
 

@@ -1,20 +1,19 @@
 #pragma once
 #include <vector>
-#include "ObserverCL.h"
+#include "Observer.h"
 
-template<typename T>
 class Subject {
 public:
-    void attach(ObserverCL<T>* observer) {
+    void attach(Observer* observer) {
         observers.push_back(observer);
     }
 
-    void notify(const T& value) {
+    void notify(ObservableSubjects source) {
         for (auto* observer : observers) {
-            if (observer) observer->onNotify(value);
+            if (observer) observer->onNotify(source, this);
         }
     }
 
 private:
-    std::vector<ObserverCL<T>*> observers;
+    std::vector<Observer*> observers;
 };

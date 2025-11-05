@@ -17,6 +17,8 @@
 #include "SceneManager.h"
 #include "Transform.h"
 
+#include "EnumLightType.h"
+
 class Application {
 public:
     void run();
@@ -35,6 +37,9 @@ private:
     float ratio = 1.0f;
 
     Camera camera;
+    Light* light = nullptr;
+
+
     CameraController cameraController;
 
     std::vector<Scene*> scenes;
@@ -46,7 +51,7 @@ private:
     Transform* moon;
     std::vector<Transform*> fireflyTransforms;
 
+
     std::vector<glm::vec3> lightPositions;
     std::vector<glm::vec3> lightAttenuations;
-    //std::vector<Transformation*> fireflyTransforms;
 };

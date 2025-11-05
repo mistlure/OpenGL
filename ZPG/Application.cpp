@@ -71,9 +71,9 @@ void Application::setupApp() {
     shaderProgram = new ShaderProgram(vertexShader, fragmentShader);
     shaderProgram->use();
 
-    Light light(glm::vec3(0.0f, 5.0f, 5.0f));
-    light.attach(shaderProgram);
-    shaderProgram->setUniform("lightPos", light.getPosition());
+    light = new Light(glm::vec3(0.0f, 5.0f, 5.0f));
+    light->attach(shaderProgram);
+    shaderProgram->setUniform("lightPos", light->getPosition());
     shaderProgram->setUniform("viewPos", cameraController.position);
 
     camera.attach(shaderProgram);
@@ -197,6 +197,7 @@ void Application::setupApp() {
 
 
 void Application::mainLoop() {
+    float lastPrintTime = 0.0f;
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -208,6 +209,11 @@ void Application::mainLoop() {
         rotatingTriangle->addTransform(new Scale(glm::vec3(2.0f)));
 
         float time = static_cast<float>(glfwGetTime());
+
+        if (time - lastPrintTime >= 1.0f) {
+            std::cout << "[ShaderProgram] Light updated: " << light->getPosition().y << std::endl;
+            lastPrintTime = time;
+        }
 
         if (currentSceneIndex == 3) {
             // Земля вращается вокруг солнца
@@ -227,9 +233,10 @@ void Application::mainLoop() {
             sun->addTransform(new Scale(glm::vec3(2.0f)));
         }
 
-        shaderProgram->setUniform("lightPos", glm::vec3(0.0f, 5.0f, 5.0f));
+        light->setPosition(glm::vec3(0.0f, 5.0f + sin(time), 5.0f));
 
-        std::cout << "Firefly[0] = " << lightPositions[0].x << ", " << lightPositions[0].z << std::endl;
+
+
 
         if (currentSceneIndex == 1) {
             for (int i = 0; i < fireflyTransforms.size(); ++i) {

@@ -7,7 +7,7 @@ Light::Light(const glm::vec3& position)
 void Light::setPosition(const glm::vec3& pos)
 {
     position = pos;
-    notify(position);
+    notify(SLight);
 }
 
 const glm::vec3& Light::getPosition() const

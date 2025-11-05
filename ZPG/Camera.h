@@ -6,7 +6,7 @@
 #include <vector>
 #include "Subject.h"
 
-class Camera : public Subject<glm::mat4>
+class Camera : public Subject
 {
 public:
     Camera();

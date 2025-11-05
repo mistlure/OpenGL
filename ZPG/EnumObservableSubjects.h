@@ -1,8 +1,6 @@
 #pragma once
-
-enum class ObservableSubjects
-{
-    Camera,
-    Light,
-    Object
+enum ObservableSubjects {
+    SCamera,
+    SLight,
+    SObject
 };
