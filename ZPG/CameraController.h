@@ -16,6 +16,7 @@ public:
     void bindCamera(Camera* cam);
     void updateDirection();
 
+    void rotate(float deltaX, float deltaY);
 private:
     Camera* camera = nullptr;
 };

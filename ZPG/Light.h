@@ -11,9 +11,7 @@ public:
 
     void setPosition(const glm::vec3& pos);
     const glm::vec3& getPosition() const;
-    LightType getType() const;
 
 private:
     glm::vec3 position;
-    LightType type;
 };

@@ -31,6 +31,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     if ((action == GLFW_PRESS || action == GLFW_REPEAT) && controller) {
         if (key == GLFW_KEY_W)
             controller->position += controller->speed * controller->front;
+        std::cout << "Camera position: " << controller->position.x << ", " << controller->position.y << ", " << controller->position.z << std::endl;
+
         if (key == GLFW_KEY_S)
             controller->position -= controller->speed * controller->front;
         if (key == GLFW_KEY_A)

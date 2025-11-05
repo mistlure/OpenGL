@@ -8,10 +8,15 @@
 #pragma once
 #include <GL/glew.h>
 
+#include "tiny_obj_loader.h"
+#include <iostream>
+#include <stdexcept>
+
 class Model
 {
 public:
     Model(float* data, size_t size);
+    Model(const char* filename);
     ~Model();
 
     void bind() const;

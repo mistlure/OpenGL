@@ -14,8 +14,6 @@
 #include <iostream>
 #include <stdlib.h>
 
-//#include "ObjLoader.h"
-//#include "Libraries/tinyobjloader/tiny_obj_loader.h"
 
 void Application::run() {
     initGLFW();
@@ -83,7 +81,7 @@ void Application::setupApp() {
     shaderProgram->setUniform("projectMatrix", camera.getProjectionMatrix());
 
     shaderProgram->setUniform("ambientColor", glm::vec3(0.25f));
-    shaderProgram->setUniform("ambientStrength", 0.1f);
+    shaderProgram->setUniform("ambientStrength", 0.5f);
 
     // Scene 1 — rotating triangle
     float triangle[] = {
@@ -167,29 +165,11 @@ void Application::setupApp() {
     scenes.push_back(scene3);
 
     // Scene 4 — solar system
-    Scene* solarScene = new Scene();
-    sun = new Transform();
-    earth = new Transform();
-    moon = new Transform();
-
-    sun->addTransform(new Scale(glm::vec3(2.0f)));
-    earth->addTransform(new Translate(glm::vec3(3.0f, 0.0f, 0.0f)));
-    earth->addTransform(new Scale(glm::vec3(1.0f)));
-    moon->addTransform(new Translate(glm::vec3(1.0f, 0.0f, 0.0f)));
-    moon->addTransform(new Scale(glm::vec3(0.5f)));
-
-    DrawableObject* sunObj = new DrawableObject(shaderProgram, sphereModel);
-    DrawableObject* earthObj = new DrawableObject(shaderProgram, sphereModel);
-    DrawableObject* moonObj = new DrawableObject(shaderProgram, sphereModel);
-
-    sunObj->transform = sun;
-    earthObj->transform = earth;
-    moonObj->transform = moon;
-
-    solarScene->addObject(sunObj);
-    solarScene->addObject(earthObj);
-    solarScene->addObject(moonObj);
-    scenes.push_back(solarScene);
+    Scene* sceneObj = new Scene();
+    Model* carModel = new Model("formula1.obj");
+    DrawableObject* car = new DrawableObject(shaderProgram, carModel);
+    sceneObj->addObject(car);
+    scenes.push_back(sceneObj);
 
     SceneManager::get().setScenes(scenes);
     glEnable(GL_DEPTH_TEST);
@@ -210,30 +190,13 @@ void Application::mainLoop() {
 
         float time = static_cast<float>(glfwGetTime());
 
+
+
         if (time - lastPrintTime >= 1.0f) {
             std::cout << "[ShaderProgram] Light updated: " << light->getPosition().y << std::endl;
             lastPrintTime = time;
         }
-
-        if (currentSceneIndex == 3) {
-            // Земля вращается вокруг солнца
-            earth->clearTransforms();
-            earth->addTransform(new Rotate(time, glm::vec3(0, 1, 0)));
-            earth->addTransform(new Translate(glm::vec3(3.0f, 0.0f, 0.0f)));
-            earth->addTransform(new Scale(glm::vec3(1.0f)));
-
-            // Луна вращается вокруг земли
-            moon->clearTransforms();
-            moon->addTransform(new Rotate(time * 2.0f, glm::vec3(0, 1, 0)));
-            moon->addTransform(new Translate(glm::vec3(1.0f, 0.0f, 0.0f)));
-            moon->addTransform(new Scale(glm::vec3(0.5f)));
-
-            // Солнце остаётся на месте, но масштабируется
-            sun->clearTransforms();
-            sun->addTransform(new Scale(glm::vec3(2.0f)));
-        }
-
-        light->setPosition(glm::vec3(0.0f, 5.0f + sin(time), 5.0f));
+        //light->setPosition(glm::vec3(0.0f, 5.0f + sin(time), 5.0f));
 
 
 

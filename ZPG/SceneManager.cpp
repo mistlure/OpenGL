@@ -1,4 +1,4 @@
-#include "SceneManager.h"
+﻿#include "SceneManager.h"
 
 SceneManager& SceneManager::get() {
     static SceneManager instance;
@@ -20,4 +20,13 @@ Scene* SceneManager::getCurrent() {
 
 int SceneManager::getIndex() {
     return currentIndex;
+}
+
+void SceneManager::setCameraController(CameraController* controller) {
+    cameraController = controller;
+}
+
+void SceneManager::handleMouseMovement(float deltaX, float deltaY) {
+    if (cameraController)
+        cameraController->rotate(deltaX, deltaY);
 }
