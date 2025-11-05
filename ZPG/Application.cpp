@@ -72,11 +72,11 @@ void Application::setupApp() {
     shaderProgram->use();
 
     Light light(glm::vec3(0.0f, 5.0f, 5.0f));
-    shaderProgram->setLightPosition(light.getPosition());
+    light.attach(shaderProgram);
     shaderProgram->setUniform("lightPos", light.getPosition());
     shaderProgram->setUniform("viewPos", cameraController.position);
 
-    camera.addObserver(shaderProgram);
+    camera.attach(shaderProgram);
     cameraController.position = glm::vec3(0.0f, 0.0f, 5.0f);
     cameraController.updateDirection();
     camera.setPerspective(45.0f, ratio, 0.1f, 100.0f);

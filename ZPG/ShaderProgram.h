@@ -7,13 +7,12 @@
 #include <glm/glm.hpp>
 
 #include "Shader.h"
-#include "CameraObserver.h"
-#include "ILightObserver.h"
+#include "ObserverCL.h"
 
 #include <vector>
 #include <string>
 
-class ShaderProgram : public ICameraObserver, public ILightObserver
+class ShaderProgram : public ObserverCL<glm::mat4>, public ObserverCL<glm::vec3>
 {
 public:
     ShaderProgram(const Shader& vertex, const Shader& fragment);
@@ -27,14 +26,14 @@ public:
     void setUniform(const std::string& name, const glm::vec3& vector) const;
     void setUniform(const std::string& name, float value) const;
     void setUniform(const std::string& name, int value) const;
-    
-    void onCameraUpdated(const glm::mat4& viewMatrix) override;
-    void onLightUpdated(const glm::vec3& position) override;
+
+    void onNotify(const glm::mat4& viewMatrix) override;
+    void onNotify(const glm::vec3& position) override;
 
     void setLightPosition(const glm::vec3& position);
     void setLightPositions(const std::vector<glm::vec3>& positions);
-
     void setLightAttenuations(const std::vector<glm::vec3>& values);
+
 private:
     GLuint id;
 };

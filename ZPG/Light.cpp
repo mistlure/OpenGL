@@ -7,22 +7,10 @@ Light::Light(const glm::vec3& position)
 void Light::setPosition(const glm::vec3& pos)
 {
     position = pos;
-    notifyObservers();
+    notify(position);
 }
 
 const glm::vec3& Light::getPosition() const
 {
     return position;
-}
-
-void Light::addObserver(ILightObserver* observer)
-{
-    if (observer)
-        observers.push_back(observer);
-}
-
-void Light::notifyObservers()
-{
-    for (auto o : observers)
-        o->onLightUpdated(position);
 }

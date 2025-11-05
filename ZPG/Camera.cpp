@@ -8,14 +8,16 @@ Camera::Camera()
 void Camera::setPosition(const glm::vec3& pos)
 {
     position = pos;
-    notifyObservers();
+    notify(viewMatrix);
+
 }
 
 // Updates the view matrix to look at a target.
 void Camera::lookAt(const glm::vec3& target, const glm::vec3& up)
 {
     viewMatrix = glm::lookAt(position, target, up);
-    notifyObservers();
+    notify(viewMatrix);
+
 }
 
 // Sets the projection matrix to a perspective projection.
@@ -40,17 +42,4 @@ const glm::mat4& Camera::getViewMatrix() const
 const glm::mat4& Camera::getProjectionMatrix() const
 {
     return projectionMatrix;
-}
-
-// Adds an observer to be notified of camera updates.
-void Camera::addObserver(ICameraObserver* observer)
-{
-    observers.push_back(observer);
-}
-
-// Notifies all observers of the current view matrix.
-void Camera::notifyObservers()
-{
-    for (auto o : observers)
-        o->onCameraUpdated(viewMatrix);
 }

@@ -100,14 +100,14 @@ void ShaderProgram::setUniform(const std::string& name, int value) const
 
 // Implementation of the ICameraObserver interface method.
 // Updates the view matrix in the shader when notified.
-void ShaderProgram::onCameraUpdated(const glm::mat4& viewMatrix)
+void ShaderProgram::onNotify(const glm::mat4& viewMatrix)
 {
     setUniform("viewMatrix", viewMatrix);
 }
 
 // Implementation of the ILightObserver interface method.
 // Updates the light position in the shader when notified.
-void ShaderProgram::onLightUpdated(const glm::vec3& position)
+void ShaderProgram::onNotify(const glm::vec3& position)
 {
     setUniform("lightPos", position);
 }
