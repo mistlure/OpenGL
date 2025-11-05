@@ -7,6 +7,7 @@
 #include <GLFW/glfw3.h>
 
 static CameraController* controller = nullptr;
+static bool cursorLocked = false;
 
 void setCameraController(CameraController* c) {
     controller = c;
@@ -43,14 +44,17 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 }
 
 void button_callback(GLFWwindow* window, int button, int action, int mods) {
-    if (action == GLFW_PRESS && controller) {
-        if (button == GLFW_MOUSE_BUTTON_LEFT) {
-            controller->yaw -= 5.0f;
-            controller->updateDirection();
+
+    if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+        cursorLocked = !cursorLocked;
+
+        if (cursorLocked) {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            std::cout << "Cursor locked\n";
         }
-        else if (button == GLFW_MOUSE_BUTTON_RIGHT) {
-            controller->yaw += 5.0f;
-            controller->updateDirection();
+        else {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            std::cout << "Cursor unlocked\n";
         }
     }
 }
@@ -69,5 +73,24 @@ void window_size_callback(GLFWwindow* window, int width, int height) {
 }
 
 void cursor_callback(GLFWwindow* window, double x, double y) {
+    static bool firstMouse = true;
+    static double lastX = 0.0, lastY = 0.0;
+
+    if (!cursorLocked || !controller) return;
+
+    if (firstMouse) {
+        lastX = x;
+        lastY = y;
+        firstMouse = false;
+        return;
+    }
+
+    float deltaX = static_cast<float>(x - lastX);
+    float deltaY = static_cast<float>(lastY - y); // инвертируем Y
+
+    lastX = x;
+    lastY = y;
+
+    controller->rotate(deltaX, deltaY);
     printf("cursor_callback\n");
 }
