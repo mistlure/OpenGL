@@ -9,18 +9,13 @@
 #include <GL/glew.h>
 #include <string>
 
-class ShaderProgram;
-
 class Shader
 {
-	// Allow ShaderProgram to access private members.
-    friend class ShaderProgram;
-
 public:
     Shader(GLenum type, const std::string& source);
     Shader(GLenum type, const char* filepath);
     ~Shader();
-
+	void attachShader(GLuint id);
 private:
     GLuint id;
 

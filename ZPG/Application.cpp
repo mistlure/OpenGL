@@ -30,6 +30,9 @@ void Application::initGLFW() {
         fprintf(stderr, "ERROR: could not start GLFW3\n");
         exit(EXIT_FAILURE);
     }
+
+    glEnable(GL_DEPTH_TEST);
+
 }
 
 void Application::initWindow() {
@@ -53,8 +56,6 @@ void Application::initWindow() {
     ratio = width / (float)height;
     glViewport(0, 0, width, height);
 
-    setCameraController(&cameraController);
-    cameraController.bindCamera(&camera);
 }
 
 void Application::initGLEW() {
@@ -63,116 +64,39 @@ void Application::initGLEW() {
 }
 
 void Application::setupApp() {
+	scene = new Scene(); // Placeholder for scene 0
+    setCameraCallbacks(scene->camera);//!!! SWITCH ON SCENNE CHANGE
+
     Shader vertexShader(GL_VERTEX_SHADER, "shaders/vertex.glsl");
-    Shader fragmentShader(GL_FRAGMENT_SHADER, "shaders/fragment_multiLight.glsl");
+    Shader fragmentShader(GL_FRAGMENT_SHADER, "shaders/fragment_phong.glsl");
 
-    shaderProgram = new ShaderProgram(vertexShader, fragmentShader);
-    shaderProgram->use();
+    auto shaderProgram = new ShaderProgram(vertexShader, fragmentShader);
 
-    light = new Light(glm::vec3(0.0f, 5.0f, 5.0f));
+	scene->camera->attach(shaderProgram);
+
+    auto light = new Light(glm::vec3(0.0f, 5.0f, 5.0f));
     light->attach(shaderProgram);
     shaderProgram->setUniform("lightPos", light->getPosition());
-    shaderProgram->setUniform("viewPos", cameraController.position);
 
-    camera.attach(shaderProgram);
-    cameraController.position = glm::vec3(0.0f, 0.0f, 5.0f);
-    cameraController.updateDirection();
-    camera.setPerspective(45.0f, ratio, 0.1f, 100.0f);
-    shaderProgram->setUniform("projectMatrix", camera.getProjectionMatrix());
+    float triangle[] = {
+        // pos             // normal
+        -0.3f, -0.3f, 0.0f,  0.0f, 0.0f, 1.0f,
+         0.3f, -0.3f, -0.5f, 0.0f, 0.0f, 1.0f,
+         0.0f,  0.3f, 0.0f,  0.0f, 0.0f, 1.0f
+    };
+
+    Model* triangleModel = new Model(triangle, sizeof(triangle));
+
+
+	scene->addObject(new DrawableObject(shaderProgram, triangleModel)); // Placeholder object for scene 0
+    scene->light = light;
+
+
+    shaderProgram->setUniform("projectMatrix", scene->camera->getProjectionMatrix());
 
     shaderProgram->setUniform("ambientColor", glm::vec3(0.25f));
     shaderProgram->setUniform("ambientStrength", 0.5f);
-
-    // Scene 1 — rotating triangle
-    float triangle[] = {
-        -0.3f, -0.3f, 0.0f,  1.0f, 0.0f, 0.0f,
-         0.3f, -0.3f, -0.5f,  0.0f, 1.0f, 0.0f,
-         0.0f,  0.3f, 0.0f,  0.0f, 0.0f, 1.0f
-    };
-    Model* triangleModel = new Model(triangle, sizeof(triangle));
-    DrawableObject* triangleObject = new DrawableObject(shaderProgram, triangleModel);
-    rotatingTriangle = new Transform();
-    rotatingTriangle->addTransform(new Rotate(glm::radians(45.0f), glm::vec3(0, 1, 0)));
-    triangleObject->transform = rotatingTriangle;
-    Scene* scene1 = new Scene();
-    scene1->addObject(triangleObject);
-    scenes.push_back(scene1);
-
-    // Scene 2 — forest
-    Scene* scene2 = new Scene();
-    Model* treeModel = new Model(tree, treeSize);
-    Model* bushModel = new Model(bush, bushSize);
-    Model* sphereModel = new Model(sphere, sphereSize);
-
-    for (int i = 0; i < 50; ++i) {
-        float x = ((rand() % 200) - 100) / 10.0f;
-        float z = ((rand() % 200) - 100) / 10.0f;
-        Transform* t = new Transform();
-        t->addTransform(new Translate(glm::vec3(x, 0.0f, z)));
-        DrawableObject* obj = new DrawableObject(shaderProgram, treeModel);
-        obj->transform = t;
-        scene2->addObject(obj);
-    }
-
-    for (int i = 0; i < 50; ++i) {
-        float x = ((rand() % 200) - 100) / 10.0f;
-        float z = ((rand() % 200) - 100) / 10.0f;
-        Transform* t = new Transform();
-        t->addTransform(new Translate(glm::vec3(x, 0.0f, z)));
-        DrawableObject* obj = new DrawableObject(shaderProgram, bushModel);
-        obj->transform = t;
-        scene2->addObject(obj);
-    }
-
-    for (int i = 0; i < 8; ++i) {
-        float x = ((rand() % 200) - 100) / 10.0f;
-        float y = ((rand() % 100)) / 10.0f + 1.0f;
-        float z = ((rand() % 200) - 100) / 10.0f;
-        glm::vec3 pos(x, y, z);
-
-        lightPositions.push_back(pos);
-        lightAttenuations.push_back(glm::vec3(0.8f, 0.4f, 0.2f));
-
-        Transform* t = new Transform();
-        t->addTransform(new Translate(pos));
-        t->addTransform(new Scale(glm::vec3(0.2f)));
-        fireflyTransforms.push_back(t);
-
-        DrawableObject* firefly = new DrawableObject(shaderProgram, sphereModel);
-        firefly->transform = t;
-        scene2->addObject(firefly);
-    }
-
-    shaderProgram->setLightPositions(lightPositions);
-    shaderProgram->setLightAttenuations(lightAttenuations);
-    scenes.push_back(scene2);
-
-    // Scene 3 — spheres
-    Scene* scene3 = new Scene();
-    glm::vec3 positions[] = {
-        glm::vec3(0.0f,  2.0f, 0.0f),
-        glm::vec3(0.0f, -2.0f, 0.0f),
-        glm::vec3(-2.0f, 0.0f, 0.0f),
-        glm::vec3(2.0f, 0.0f, 0.0f)
-    };
-    for (int i = 0; i < 4; ++i) {
-        Transform* t = new Transform();
-        t->addTransform(new Translate(positions[i]));
-        DrawableObject* obj = new DrawableObject(shaderProgram, sphereModel);
-        obj->transform = t;
-        scene3->addObject(obj);
-    }
-    scenes.push_back(scene3);
-
-    // Scene 4 — solar system
-    Scene* sceneObj = new Scene();
-    Model* carModel = new Model("formula1.obj");
-    DrawableObject* car = new DrawableObject(shaderProgram, carModel);
-    sceneObj->addObject(car);
-    scenes.push_back(sceneObj);
-
-    SceneManager::get().setScenes(scenes);
-    glEnable(GL_DEPTH_TEST);
+   
 }
 
 
@@ -181,42 +105,7 @@ void Application::mainLoop() {
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        camera.setPosition(cameraController.position);
-        cameraController.updateDirection();
-
-        // Обновляем трансформацию вращающегося треугольника
-        rotatingTriangle->clearTransforms();
-        rotatingTriangle->addTransform(new Scale(glm::vec3(2.0f)));
-
-        float time = static_cast<float>(glfwGetTime());
-
-
-
-        if (time - lastPrintTime >= 1.0f) {
-            std::cout << "[ShaderProgram] Light updated: " << light->getPosition().y << std::endl;
-            lastPrintTime = time;
-        }
-        //light->setPosition(glm::vec3(0.0f, 5.0f + sin(time), 5.0f));
-
-
-
-
-        if (currentSceneIndex == 1) {
-            for (int i = 0; i < fireflyTransforms.size(); ++i) {
-                float t = time;
-                glm::mat4 old = fireflyTransforms[i]->getMatrix();
-                glm::vec3 pos = glm::vec3(old[3]);
-
-                pos.x += sin(t + pos.x) * 0.01f;
-                pos.z += cos(t + pos.z) * 0.01f;
-
-                fireflyTransforms[i]->clearTransforms();
-                fireflyTransforms[i]->addTransform(new Translate(pos));
-                fireflyTransforms[i]->addTransform(new Scale(glm::vec3(0.2f)));
-            }
-        }
-
-        SceneManager::get().getCurrent()->drawAll();
+        scene->drawAll();
 
         glfwPollEvents();
         glfwSwapBuffers(window);

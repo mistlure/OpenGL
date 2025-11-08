@@ -7,17 +7,10 @@ Transform* Transform::addTransform(TransformBase* transform) {
 }
 
 glm::mat4 Transform::getMatrix() {
-    glm::mat4 outMatrix = transformMatrix;
+    glm::mat4 outMatrix = glm::mat4(1.f);
     for (const auto& t : transforms) {
         outMatrix *= t->getMatrix();
     }
     return outMatrix;
-}
-
-void Transform::clearTransforms()
-{
-    for (auto* t : transforms)
-        delete t;
-    transforms.clear();
 }
 

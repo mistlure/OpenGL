@@ -2,20 +2,21 @@
 #include <iostream>
 
 // Constructor that links vertex and fragment shaders into a shader program
-ShaderProgram::ShaderProgram(const Shader& vertex, const Shader& fragment)
+ShaderProgram::ShaderProgram(Shader& vertex, Shader& fragment)
 {   
     // Create a new shader program object
     id = glCreateProgram();
 
     // Attach the compiled vertex&fragment shaders to the program
     // Safe access to internal shader ID
-    glAttachShader(id, vertex.id);
-    glAttachShader(id, fragment.id);
-    // Combine vertex + fragment into one executable
-    glLinkProgram(id);
-
+    vertex.attachShader(id);
+    fragment.attachShader(id);
+    
     // Check if the linking was successful
     GLint success;
+
+    // Combine vertex + fragment into one executable
+    glLinkProgram(id);
     glGetProgramiv(id, GL_LINK_STATUS, &success);
 
 	// Failure test
@@ -41,7 +42,7 @@ ShaderProgram::~ShaderProgram()
 }
 
 // Activate the shader program for rendering
-void ShaderProgram::use() const
+void ShaderProgram::useProgram()
 {
     glUseProgram(id);
 }

@@ -9,7 +9,7 @@ public:
     Rotate(float angle, const glm::vec3& axis);
     glm::mat4 getMatrix() override;
 
-private:
+protected:
     float angle;
     glm::vec3 axis;
 };

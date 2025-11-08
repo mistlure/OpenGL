@@ -47,6 +47,11 @@ Shader::~Shader()
     glDeleteShader(id);
 }
 
+void Shader::attachShader(GLuint programID)
+{
+    glAttachShader(programID, id);
+}
+
 // Private method to create and compile a shader from source code
 void Shader::createShader(GLenum shaderType, const char* shaderCode)
 {

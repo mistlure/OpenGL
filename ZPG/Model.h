@@ -24,8 +24,7 @@ public:
     void draw() const;
 
 private:
-    GLuint vao;
-    GLuint vbo;
+    GLuint VAO, VBO = 0;
 
     GLsizei vertexCount;
 };

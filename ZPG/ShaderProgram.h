@@ -17,11 +17,11 @@
 class ShaderProgram : public Observer
 {
 public:
-    ShaderProgram(const Shader& vertex, const Shader& fragment);
+    ShaderProgram(Shader& vertex, Shader& fragment);
     ~ShaderProgram();
 
-    void use() const;
-
+    void useProgram();
+    
     void setModelMatrix(const glm::mat4& matrix) const;
 
     void setUniform(const std::string& name, const glm::mat4& matrix) const;

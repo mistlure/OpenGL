@@ -1,9 +1,5 @@
 ﻿#include "SceneManager.h"
 
-SceneManager& SceneManager::get() {
-    static SceneManager instance;
-    return instance;
-}
 
 void SceneManager::setScenes(const std::vector<Scene*>& sceneList) {
     scenes = sceneList;
@@ -22,11 +18,8 @@ int SceneManager::getIndex() {
     return currentIndex;
 }
 
-void SceneManager::setCameraController(CameraController* controller) {
-    cameraController = controller;
-}
+
 
 void SceneManager::handleMouseMovement(float deltaX, float deltaY) {
-    if (cameraController)
-        cameraController->rotate(deltaX, deltaY);
+    printf("handle mouse moovement is NOT implemented\n");
 }

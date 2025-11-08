@@ -2,10 +2,11 @@
 #include "DynamicRotate.h"
 
 DynamicRotate::DynamicRotate(float speed, const glm::vec3& axis)
-    : speed(speed), axis(axis) {
+    : Rotate(0.f, glm::normalize(axis)) , speed(glm::radians(speed)) {
 }
 
 glm::mat4 DynamicRotate::getMatrix() {
-    float time = static_cast<float>(glfwGetTime());
-    return glm::rotate(glm::mat4(1.0f), time * speed, glm::normalize(axis));
+	this->angle += speed; // Increment angle for continuous rotation
+
+    return glm::rotate(glm::mat4(1.0f), angle, glm::normalize(axis));
 }

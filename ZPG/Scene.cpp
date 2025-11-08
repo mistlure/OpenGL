@@ -8,13 +8,14 @@ void Scene::addObject(DrawableObject* obj)
 }
 
 // Draws all objects in the scene
-void Scene::drawAll() const
+void Scene::drawAll()
 {
-    for (auto obj : objects)
+    for (auto& obj : objects)
     {
-        obj->draw();
+        obj->draw(camera, light);
     }
 }
+
 
 // Clears all objects from the scene
 void Scene::clear()
