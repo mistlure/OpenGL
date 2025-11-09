@@ -1,0 +1,23 @@
+# Build results
+bin/
+obj/
+
+x86/
+*.exe
+*.pdb
+
+# Visual Studio cache
+.vs/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Other
+*.log
+*.vsidx
+
+#compilation files
+ZPG_CV_1/x64
