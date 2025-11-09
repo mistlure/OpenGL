@@ -5,20 +5,26 @@
 #include "Light.h"
 
 #include "Camera.h"
+#include "Callbacks.h"
+
 class Scene
 {
-protected:
-public:
-    void drawAll();
-    void clear();	
-    Light* light = nullptr;
-    void addObject(DrawableObject* obj);
-    
-    Camera* camera = new Camera();
-    //CameraController* cameraController = nullptr;
-
-
 private:
     std::vector<DrawableObject*> objects;
+    Camera* camera = new Camera();
+
+protected:
+    Light* light = new Light(glm::vec3(0.0f, 5.0f, 5.0f));
+
+public:
+    void drawAll();
+	Camera* getCamera() { return camera; }
+    void bindCallbacks()
+    {
+        setCameraCallbacks(camera);
+	}
+    void addObject(DrawableObject* obj);
+
+
 };
 

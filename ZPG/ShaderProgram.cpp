@@ -100,6 +100,7 @@ void ShaderProgram::setUniform(const std::string& name, int value) const
 }
 
 void ShaderProgram::onNotify(ObservableSubjects source, const void* subject) {
+    useProgram();
     switch (source) {
     case SCamera: {
         const Camera* cam = static_cast<const Camera*>(subject);

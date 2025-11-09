@@ -17,8 +17,3 @@ void Scene::drawAll()
 }
 
 
-// Clears all objects from the scene
-void Scene::clear()
-{
-    objects.clear();
-}

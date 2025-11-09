@@ -14,7 +14,7 @@
 #include <iostream>
 #include <stdlib.h>
 
-
+#include "Scene1.h"
 void Application::run() {
     initGLFW();
     initWindow();
@@ -31,7 +31,6 @@ void Application::initGLFW() {
         exit(EXIT_FAILURE);
     }
 
-    glEnable(GL_DEPTH_TEST);
 
 }
 
@@ -61,42 +60,47 @@ void Application::initWindow() {
 void Application::initGLEW() {
     glewExperimental = GL_TRUE;
     glewInit();
+    glEnable(GL_DEPTH_TEST);
+
 }
 
 void Application::setupApp() {
-	scene = new Scene(); // Placeholder for scene 0
-    setCameraCallbacks(scene->camera);//!!! SWITCH ON SCENNE CHANGE
 
-    Shader vertexShader(GL_VERTEX_SHADER, "shaders/vertex.glsl");
-    Shader fragmentShader(GL_FRAGMENT_SHADER, "shaders/fragment_phong.glsl");
-
-    auto shaderProgram = new ShaderProgram(vertexShader, fragmentShader);
-
-	scene->camera->attach(shaderProgram);
-
-    auto light = new Light(glm::vec3(0.0f, 5.0f, 5.0f));
-    light->attach(shaderProgram);
-    shaderProgram->setUniform("lightPos", light->getPosition());
-
-    float triangle[] = {
-        // pos             // normal
-        -0.3f, -0.3f, 0.0f,  0.0f, 0.0f, 1.0f,
-         0.3f, -0.3f, -0.5f, 0.0f, 0.0f, 1.0f,
-         0.0f,  0.3f, 0.0f,  0.0f, 0.0f, 1.0f
-    };
-
-    Model* triangleModel = new Model(triangle, sizeof(triangle));
-
-
-	scene->addObject(new DrawableObject(shaderProgram, triangleModel)); // Placeholder object for scene 0
-    scene->light = light;
-
-
-    shaderProgram->setUniform("projectMatrix", scene->camera->getProjectionMatrix());
-
-    shaderProgram->setUniform("ambientColor", glm::vec3(0.25f));
-    shaderProgram->setUniform("ambientStrength", 0.5f);
-   
+    scene = new Scene1(); // Start with scene 1
+	scene->bindCallbacks();
+    // 
+    //scene = new Scene(); // Placeholder for scene 0
+    //setCameraCallbacks(scene->getCamera());//!!! SWITCH ON SCENNE CHANGE
+    //
+    //Shader vertexShader(GL_VERTEX_SHADER, "shaders/vertex.glsl");
+    //Shader fragmentShader(GL_FRAGMENT_SHADER, "shaders/fragment_phong.glsl");
+    //
+    //auto shaderProgram = new ShaderProgram(vertexShader, fragmentShader);
+    //shaderProgram->useProgram();
+    //
+    //scene->getCamera()->attach(shaderProgram);
+    //auto light = new Light(glm::vec3(0.0f, 5.0f, 5.0f));
+    //light->attach(shaderProgram);
+    //shaderProgram->setUniform("lightPos", light->getPosition());
+    //
+    //float triangle[] = {
+    //    // pos             // normal
+    //    -0.3f, -0.3f, 0.0f,  0.0f, 0.0f, 1.0f,
+    //     0.3f, -0.3f, -0.5f, 0.0f, 0.0f, 1.0f,
+    //     0.0f,  0.3f, 0.0f,  0.0f, 0.0f, 1.0f
+    //};
+    //
+    //Model* triangleModel = new Model(triangle, sizeof(triangle));
+    //
+    //
+    //scene->addObject(new DrawableObject(shaderProgram, triangleModel)); // Placeholder object for scene 0
+    //
+    //
+    //shaderProgram->setUniform("projectMatrix", scene->getCamera()->getProjectionMatrix());
+    //
+    //shaderProgram->setUniform("ambientColor", glm::vec3(0.25f));
+    //shaderProgram->setUniform("ambientStrength", 0.5f);
+    
 }
 
 
