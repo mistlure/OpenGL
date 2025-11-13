@@ -3,8 +3,13 @@ bin/
 obj/
 
 x86/
+x64/
 *.exe
 *.pdb
+*.ilk
+*.idb
+*.tlog
+*.obj
 
 # Visual Studio cache
 .vs/
@@ -15,9 +20,16 @@ x86/
 *.userosscache
 *.sln.docstates
 
-# Other
+# Logs
 *.log
 *.vsidx
 
-#compilation files
-ZPG_CV_1/x64
+# --- Compilation folders (ignore all, except specific DLL) ---
+# Ignore all ZPG/x64/Debug
+ZPG/x64/Debug/*
+
+# remain
+!ZPG/x64/Debug/
+# 
+!ZPG/x64/Debug/glew32.dll
+!ZPG/x64/Debug/glfw3.dll

@@ -13,7 +13,7 @@
 class DrawableObject
 {
 public:
-    DrawableObject(ShaderProgram* shaderProgram, Model* model);
+    DrawableObject(const char* ShaderPair[2], Model* model, Camera* camera, Light* light);
     void draw(Camera* camera, Light* light);
 
     Transform* transform = new Transform();

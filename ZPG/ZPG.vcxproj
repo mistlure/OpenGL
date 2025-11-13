@@ -151,6 +151,7 @@
     <ClCompile Include="Scene1.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="ShaderParis.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="SphereData.cpp" />
     <ClCompile Include="Transform.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="Scene1.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="ShaderPairs.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="SphereData.h" />
     <ClInclude Include="Subject.h" />
