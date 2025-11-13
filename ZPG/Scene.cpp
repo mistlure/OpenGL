@@ -12,7 +12,7 @@ void Scene::drawAll()
 {
     for (auto& obj : objects)
     {
-        obj->draw(camera, light);
+        obj->draw(light);
     }
 }
 

@@ -11,25 +11,21 @@ DrawableObject::DrawableObject(const char* ShaderPair[2], Model* model, Camera* 
 	shaderProgram->useProgram();
     shaderProgram->setUniform("lightPos", light->getPosition());
 
-
 }
 
-void DrawableObject::draw(Camera* camera, Light* light)
+void DrawableObject::draw(Light* light)
 {
     shaderProgram->useProgram();
 
     // set matrices
     shaderProgram->setUniform("modelMatrix", transform->getMatrix());
-    /*shaderProgram->setUniform("viewMatrix", camera->getViewMatrix());
-    shaderProgram->setUniform("projectMatrix", camera->getProjectionMatrix());*/
-
-    // set camera and light positions
-    shaderProgram->setUniform("viewPos", camera->getPosition());
+   
     shaderProgram->setUniform("lightPos", light->getPosition());
 
-    // set object color
-    shaderProgram->setUniform("objectColor", glm::vec3(1.0f, 0.5f, 0.3f));
+    model->bind();
 
-    // draw model
-    model->draw();
+    glDrawArrays(GL_TRIANGLES, 0, model->getVertexCount()); 
+
+    glBindVertexArray(0);
+    glUseProgram(0);
 }

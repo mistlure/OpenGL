@@ -80,6 +80,7 @@ void ShaderProgram::onNotify(ObservableSubjects source, const void* subject) {
         const Camera* cam = static_cast<const Camera*>(subject);
         setUniform("viewMatrix", cam->getViewMatrix());
         setUniform("projectMatrix", cam->getProjectionMatrix());
+        setUniform("viewPos", cam->getPosition());
         break;
     }
     case SLight: {

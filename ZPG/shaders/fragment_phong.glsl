@@ -5,12 +5,12 @@ in vec3 Normal;
 
 uniform vec3 lightPos;      // light position
 uniform vec3 viewPos;       // camera position
-uniform vec3 objectColor;   // object color
 
 out vec4 finalColor;
 
 void main()
 {
+    vec3 objectColor = vec3(0.385, 0.647, 0.812);
     vec3 norm = normalize(Normal);
     vec3 lightDir = normalize(lightPos - FragPos);
     float diff = max(dot(norm, lightDir), 0.0);

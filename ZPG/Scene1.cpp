@@ -5,9 +5,6 @@
 Scene1::Scene1()
 {
 
-    //light->attach(shaderProgram);
-    //shaderProgram->setUniform("lightPos", light->getPosition());
-
     float triangle[] = {
         // pos             // normal
         -0.3f, -0.3f, 0.0f,  0.0f, 0.0f, 1.0f,

@@ -19,12 +19,11 @@ public:
     Model(const char* filename);
     ~Model();
 
+	int getVertexCount() { return vertexCount; }
     void bind() const;
-	void unbind() const;
-    void draw() const;
 
 private:
     GLuint VAO, VBO = 0;
 
-    GLsizei vertexCount;
+    int vertexCount;
 };

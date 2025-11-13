@@ -112,15 +112,3 @@ void Model::bind() const
 {
     glBindVertexArray(VAO);
 }
-
-// Unbinds any VAO to prevent accidental modification
-void Model::unbind() const
-{
-    glBindVertexArray(0);
-}
-
-// Draws the model using the stored vertex count
-void Model::draw() const
-{
-    glDrawArrays(GL_TRIANGLES, 0, vertexCount);
-}
