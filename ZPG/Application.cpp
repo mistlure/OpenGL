@@ -30,7 +30,11 @@ void Application::initGLFW() {
         fprintf(stderr, "ERROR: could not start GLFW3\n");
         exit(EXIT_FAILURE);
     }
-
+    //Init correct GLFW version
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 }
 
@@ -49,18 +53,19 @@ void Application::initWindow() {
     glfwSetWindowFocusCallback(window, window_focus_callback);
     glfwSetWindowIconifyCallback(window, window_iconify_callback);
     glfwSetWindowSizeCallback(window, window_size_callback);
-
-    int width, height;
-    glfwGetFramebufferSize(window, &width, &height);
-    ratio = width / (float)height;
-    glViewport(0, 0, width, height);
-
 }
 
 void Application::initGLEW() {
     glewExperimental = GL_TRUE;
-    glewInit();
+    if (glewInit() != GLEW_OK) {
+        fprintf(stderr, "ERROR: could not start GLEW\n");
+        exit(EXIT_FAILURE);
+    }
     glEnable(GL_DEPTH_TEST);
+
+    int width, height;
+    glfwGetFramebufferSize(window, &width, &height);
+    window_size_callback(window, width, height);
 
 }
 
@@ -108,10 +113,10 @@ void Application::mainLoop() {
     float lastPrintTime = 0.0f;
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glfwPollEvents();
 
         scene->drawAll();
 
-        glfwPollEvents();
         glfwSwapBuffers(window);
     }
 }

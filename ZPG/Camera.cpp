@@ -19,6 +19,7 @@ void Camera::setPosition(const glm::vec3& pos) {
 
 void Camera::setPerspective(float fov, float aspect, float nearPlane, float farPlane) {
     projectionMatrix = glm::perspective(glm::radians(fov), aspect, nearPlane, farPlane);
+	notify(SCamera);
 }
 
 void Camera::rotate(float deltaX, float deltaY) {
@@ -39,4 +40,5 @@ void Camera::rotate(float deltaX, float deltaY) {
 
 void Camera::updateViewMatrix() {
     viewMatrix = glm::lookAt(position, position + front, up);
+	notify(SCamera);
 }

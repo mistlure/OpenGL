@@ -6,7 +6,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Subject.h"
-
+#include "EnumObservableSubjects.h"
 class Camera : public Subject {
 public:
     Camera();

@@ -20,8 +20,8 @@ void DrawableObject::draw(Camera* camera, Light* light)
 
     // set matrices
     shaderProgram->setUniform("modelMatrix", transform->getMatrix());
-    shaderProgram->setUniform("viewMatrix", camera->getViewMatrix());
-    shaderProgram->setUniform("projectMatrix", camera->getProjectionMatrix());
+    /*shaderProgram->setUniform("viewMatrix", camera->getViewMatrix());
+    shaderProgram->setUniform("projectMatrix", camera->getProjectionMatrix());*/
 
     // set camera and light positions
     shaderProgram->setUniform("viewPos", camera->getPosition());
