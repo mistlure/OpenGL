@@ -1,6 +1,6 @@
 #pragma once
 #include "Scene.h"
-
+#include "Translate.h"
 class Scene1 : public Scene
 {
 public:

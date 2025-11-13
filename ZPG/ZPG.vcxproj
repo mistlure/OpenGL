@@ -142,7 +142,6 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DrawableObject.cpp" />
     <ClCompile Include="DynamicRotate.cpp" />
-    <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Rotate.cpp" />
@@ -168,7 +167,6 @@
     <ClInclude Include="DynamicRotate.h" />
     <ClInclude Include="EnumLightType.h" />
     <ClInclude Include="EnumObservableSubjects.h" />
-    <ClInclude Include="InputManager.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Observer.h" />

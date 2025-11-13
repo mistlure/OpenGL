@@ -14,8 +14,10 @@ Scene1::Scene1()
 
     Model* triangleModel = new Model(triangle, sizeof(triangle));
 
+	DrawableObject* triangleObject = new DrawableObject(ShaderPairs::Phong, triangleModel, getCamera(), light);
+	triangleObject->transform->addTransform(new Translate(glm::vec3(0.0f, 0.0f, -1.0f)));
 
-    addObject(new DrawableObject(ShaderPairs::Phong, triangleModel, getCamera(), light)); // Placeholder object for scene 0
+    addObject(triangleObject);
 
 
 }
