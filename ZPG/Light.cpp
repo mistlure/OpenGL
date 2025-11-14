@@ -1,16 +1,7 @@
 #include "Light.h"
 
-Light::Light(const glm::vec3& position)
-    : position(position) {
+Light::Light(LightType type, const glm::vec3& col)
+    : type(type), color(col) {
 }
 
-void Light::setPosition(const glm::vec3& pos)
-{
-    position = pos;
-    notify(SLight);
-}
-
-const glm::vec3& Light::getPosition() const
-{
-    return position;
-}
+Light::~Light() {}

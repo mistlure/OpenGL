@@ -10,7 +10,7 @@
 #include "Observer.h"
 #include "Camera.h"
 #include "Light.h"
-
+#include "PointLight.h"
 #include <vector>
 #include <string>
 

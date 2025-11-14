@@ -144,6 +144,7 @@
     <ClCompile Include="DynamicRotate.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="Rotate.cpp" />
     <ClCompile Include="Scale.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="Light.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Observer.h" />
+    <ClInclude Include="PointLight.h" />
     <ClInclude Include="Rotate.h" />
     <ClInclude Include="Scale.h" />
     <ClInclude Include="Scene.h" />

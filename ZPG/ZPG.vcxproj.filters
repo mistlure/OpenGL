@@ -114,6 +114,9 @@
     <ClCompile Include="ShaderParis.cpp">
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
+    <ClCompile Include="PointLight.cpp">
+      <Filter>Source Files\Lights</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Callbacks.h">
@@ -193,6 +196,9 @@
     </ClInclude>
     <ClInclude Include="ShaderPairs.h">
       <Filter>Source Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

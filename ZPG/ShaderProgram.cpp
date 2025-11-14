@@ -82,6 +82,7 @@ void ShaderProgram::setUniform(const std::string& name, int value) const
 
 void ShaderProgram::onNotify(ObservableSubjects source) {
     useProgram();
+
     switch (source) {
     case SCamera: {
         setUniform("viewMatrix", camera->getViewMatrix());
@@ -90,12 +91,34 @@ void ShaderProgram::onNotify(ObservableSubjects source) {
         break;
     }
     case SLight: {
-        std::vector<Light*> l = *lights;
-        setUniform("lightPos", l[0]->getPosition());
-        //std::cout << "Light updated: " << light->getPosition().y << std::endl;
+        const auto& lightList = *lights;
+
+        setUniform("numberOfLights", static_cast<int>(lightList.size()));
+
+        for (size_t i = 0; i < lightList.size(); ++i)
+        {
+            Light* light = lightList[i];
+            std::string prefix = "lights[" + std::to_string(i) + "]";
+
+            // Base light properties
+            setUniform(prefix + ".type", static_cast<int>(light->type));
+            setUniform(prefix + ".color", light->color);
+            setUniform(prefix + ".isOn", light->isOn);
+
+            // PointLight specific
+            if (auto* point = dynamic_cast<PointLight*>(light))
+            {
+                setUniform(prefix + ".position", point->position);
+                setUniform(prefix + ".constant", point->constant);
+                setUniform(prefix + ".linear", point->linear);
+                setUniform(prefix + ".quadratic", point->quadratic);
+            }
+
+            // TODO: if you add SpotLight or DirectionalLight, extend here
+            // if (auto* spot = dynamic_cast<SpotLight*>(light)) { ... }
+        }
+
         break;
     }
-    default:
-        break;
     }
 }
