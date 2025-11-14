@@ -129,4 +129,5 @@ void ShaderProgram::onNotify(ObservableSubjects source) {
         break;
     }
     }
+    glUseProgram(0);
 }
