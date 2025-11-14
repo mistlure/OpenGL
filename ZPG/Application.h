@@ -12,7 +12,6 @@
 #include "Scene.h"
 #include "Camera.h"
 #include "Light.h"
-#include "SceneManager.h"
 #include "Transform.h"
 
 #include "EnumLightType.h"

@@ -1,5 +1,4 @@
 ﻿#include "callbacks.h"
-#include "SceneManager.h" // You might have this for scene switching
 #include "Camera.h"       // Include the new unified Camera header
 
 #include <iostream>
