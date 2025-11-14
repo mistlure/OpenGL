@@ -21,6 +21,7 @@ class Application {
 public:
     void run();
     void switchScene(int index);
+	Scene* getCurrentScene() { return currentScene; }
 private:
     void initGLFW();
     void initWindow();

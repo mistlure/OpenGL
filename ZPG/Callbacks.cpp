@@ -31,6 +31,14 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         if (key == GLFW_KEY_1) app->switchScene(0);
         if (key == GLFW_KEY_2) app->switchScene(1);
         if (key == GLFW_KEY_3) app->switchScene(2);
+        
+        
+        
+        
+        if (key == GLFW_KEY_F) app->getCurrentScene()->switchHeadLight();
+
+
+
     }
 
     // Handle camera movement input
