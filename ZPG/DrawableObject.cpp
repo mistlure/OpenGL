@@ -13,15 +13,13 @@ DrawableObject::DrawableObject(const char* ShaderPair[2], Model* model, Camera* 
 
 }
 
-void DrawableObject::draw(Light* light)
+void DrawableObject::draw()
 {
     shaderProgram->useProgram();
 
     // set matrices
     shaderProgram->setUniform("modelMatrix", transform->getMatrix());
    
-    shaderProgram->setUniform("lightPos", light->getPosition());
-
     model->bind();
 
     glDrawArrays(GL_TRIANGLES, 0, model->getVertexCount()); 
