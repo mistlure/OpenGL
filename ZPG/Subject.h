@@ -9,8 +9,8 @@ public:
     }
 
     void notify(ObservableSubjects source) {
-        for (auto* observer : observers) {
-            if (observer) observer->onNotify(source, this);
+        for (auto observer : observers) {
+            if (observer) observer->onNotify(source);
         }
     }
 

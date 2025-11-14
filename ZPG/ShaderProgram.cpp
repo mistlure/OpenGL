@@ -1,7 +1,7 @@
 ﻿#include "ShaderProgram.h"
 #include <iostream>
 
-ShaderProgram::ShaderProgram(Shader& vertex, Shader& fragment)
+ShaderProgram::ShaderProgram(Shader& vertex, Shader& fragment, Camera* cam, Light* light) : camera(cam), light(light)
 {   
     id = glCreateProgram();
 
@@ -22,6 +22,12 @@ ShaderProgram::ShaderProgram(Shader& vertex, Shader& fragment)
         std::cerr << "Shader program linking failed:\n" << log << std::endl;
         delete[] log;
     }
+
+    camera->attach(this);
+    onNotify(ObservableSubjects::SCamera);
+    light->attach(this);
+    onNotify(ObservableSubjects::SLight);
+
 }   
 
 ShaderProgram::~ShaderProgram()
@@ -73,18 +79,16 @@ void ShaderProgram::setUniform(const std::string& name, int value) const
         glUniform1i(location, value);
 }
 
-void ShaderProgram::onNotify(ObservableSubjects source, const void* subject) {
+void ShaderProgram::onNotify(ObservableSubjects source) {
     useProgram();
     switch (source) {
     case SCamera: {
-        const Camera* cam = static_cast<const Camera*>(subject);
-        setUniform("viewMatrix", cam->getViewMatrix());
-        setUniform("projectMatrix", cam->getProjectionMatrix());
-        setUniform("viewPos", cam->getPosition());
+        setUniform("viewMatrix", camera->getViewMatrix());
+        setUniform("projectMatrix", camera->getProjectionMatrix());
+        setUniform("viewPos", camera->getPosition());
         break;
     }
     case SLight: {
-        const Light* light = static_cast<const Light*>(subject);
         setUniform("lightPos", light->getPosition());
         //std::cout << "Light updated: " << light->getPosition().y << std::endl;
         break;

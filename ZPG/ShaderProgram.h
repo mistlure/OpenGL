@@ -17,7 +17,7 @@
 class ShaderProgram : public Observer
 {
 public:
-    ShaderProgram(Shader& vertex, Shader& fragment);
+    ShaderProgram(Shader& vertex, Shader& fragment, Camera* camera, Light* light);
     ~ShaderProgram();
 
     void useProgram();
@@ -29,12 +29,11 @@ public:
     void setUniform(const std::string& name, float value) const;
     void setUniform(const std::string& name, int value) const;
 
-    void onNotify(ObservableSubjects source, const void* subject) override;
+    void onNotify(ObservableSubjects source) override;
 
-    void setLightPosition(const glm::vec3& position);
-    void setLightPositions(const std::vector<glm::vec3>& positions);
-    void setLightAttenuations(const std::vector<glm::vec3>& values);
 
 private:
     GLuint id;
+	Camera* camera = nullptr;
+	Light* light = nullptr;
 };
