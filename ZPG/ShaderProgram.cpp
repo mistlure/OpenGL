@@ -113,7 +113,15 @@ void ShaderProgram::onNotify(ObservableSubjects source) {
                 setUniform(prefix + ".linear", point->linear);
                 setUniform(prefix + ".quadratic", point->quadratic);
             }
-
+            else if (auto* point = dynamic_cast<SpotLight*>(light)) {
+                setUniform((prefix + ".position").c_str(), point->position);
+                setUniform((prefix + ".direction").c_str(), point->direction);
+                setUniform((prefix + ".cutOff").c_str(), point->cutOff);
+                setUniform((prefix + ".outerCutOff").c_str(), point->outerCutOff);
+                setUniform((prefix + ".constant").c_str(), 1.0f);
+                setUniform((prefix + ".linear").c_str(), 0.09f);
+                setUniform((prefix + ".quadratic").c_str(), 0.032f);
+            }
             // TODO: if you add SpotLight or DirectionalLight, extend here
             // if (auto* spot = dynamic_cast<SpotLight*>(light)) { ... }
         }

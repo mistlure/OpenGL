@@ -1,4 +1,9 @@
 #include "Scene.h"
+#include "HeadLight.h"
+Scene::Scene()
+{
+	addLight(headLight);
+}
 
 // Adds a DrawableObject to the scene
 void Scene::addObject(DrawableObject* obj)
@@ -25,4 +30,9 @@ Light* Scene::addLight(Light* light) {
 	}
 	lights.push_back(light);
 	return light;
+}
+
+void Scene::switchHeadLight() {
+	headLight->isOn = !headLight->isOn;
+	headLight->notify(ObservableSubjects::SLight);
 }

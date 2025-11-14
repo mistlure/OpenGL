@@ -9,8 +9,11 @@
 #include "Shader.h"
 #include "Observer.h"
 #include "Camera.h"
+
 #include "Light.h"
 #include "PointLight.h"
+#include "Spotlight.h"
+
 #include <vector>
 #include <string>
 
