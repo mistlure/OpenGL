@@ -123,6 +123,9 @@
     <ClCompile Include="HeadLight.cpp">
       <Filter>Source Files\Lights</Filter>
     </ClCompile>
+    <ClCompile Include="Scene2.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Callbacks.h">
@@ -210,6 +213,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="HeadLight.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

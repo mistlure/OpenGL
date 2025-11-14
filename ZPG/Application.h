@@ -20,6 +20,7 @@
 class Application {
 public:
     void run();
+    void switchScene(int index);
 private:
     void initGLFW();
     void initWindow();
@@ -30,7 +31,7 @@ private:
 
     GLFWwindow* window = nullptr;
     float ratio = 1.0f;
-
-    
-    Scene* scene;
+   
+    std::vector<Scene*> scenes;
+    Scene* currentScene;
 };

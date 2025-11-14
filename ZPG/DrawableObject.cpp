@@ -6,8 +6,6 @@ DrawableObject::DrawableObject(const char* ShaderPair[2], Model* model, Camera* 
     Shader fragmentShader(GL_FRAGMENT_SHADER, ShaderPair[1]);
     shaderProgram = new ShaderProgram(vertexShader, fragmentShader, camera, lights);
 
-	shaderProgram->useProgram();
-
 }
 
 void DrawableObject::draw()

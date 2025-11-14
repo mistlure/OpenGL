@@ -3,7 +3,7 @@
 #include "Camera.h"       // Include the new unified Camera header
 
 #include <iostream>
-
+#include "Application.h"
 
 // Global pointer to the single Camera object
 static Camera* camera = nullptr;
@@ -21,6 +21,17 @@ void error_callback(int error, const char* description) {
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GL_TRUE);
+    
+    if (action == GLFW_PRESS) {
+        // получаем указатель на Application
+        Application* app = static_cast<Application*>(glfwGetWindowUserPointer(window));
+        if (!app) return;
+
+        // переключение сцен
+        if (key == GLFW_KEY_1) app->switchScene(0);
+        if (key == GLFW_KEY_2) app->switchScene(1);
+        if (key == GLFW_KEY_3) app->switchScene(2);
+    }
 
     // Handle camera movement input
     if ((action == GLFW_PRESS || action == GLFW_REPEAT) && camera) {
