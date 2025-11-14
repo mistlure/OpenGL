@@ -7,6 +7,7 @@
 #include "Camera.h"
 #include "Callbacks.h"
 
+#define MAX_LIGHTS 8
 class Scene
 {
 private:
@@ -14,8 +15,8 @@ private:
     Camera* camera = new Camera();
 
 protected:
-    Light* light = new Light(glm::vec3(0.0f, 5.0f, 5.0f));
-
+    //Light* light = new Light(glm::vec3(0.0f, 5.0f, 5.0f));
+	std::vector<Light*> lights;
 public:
     void drawAll();
 	Camera* getCamera() { return camera; }
@@ -24,7 +25,7 @@ public:
         setCameraCallbacks(camera);
 	}
     void addObject(DrawableObject* obj);
-
-
+    Light* addLight(Light* l);
+    std::vector<Light*>* getLights() { return &lights; }
 };
 

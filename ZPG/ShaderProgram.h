@@ -17,7 +17,7 @@
 class ShaderProgram : public Observer
 {
 public:
-    ShaderProgram(Shader& vertex, Shader& fragment, Camera* camera, Light* light);
+    ShaderProgram(Shader& vertex, Shader& fragment, Camera* camera, std::vector<Light*>* lights);
     ~ShaderProgram();
 
     void useProgram();
@@ -35,5 +35,5 @@ public:
 private:
     GLuint id;
 	Camera* camera = nullptr;
-	Light* light = nullptr;
+	std::vector<Light*>* lights= nullptr;
 };

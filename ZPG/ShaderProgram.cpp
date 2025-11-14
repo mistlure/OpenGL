@@ -1,7 +1,7 @@
 ﻿#include "ShaderProgram.h"
 #include <iostream>
 
-ShaderProgram::ShaderProgram(Shader& vertex, Shader& fragment, Camera* cam, Light* light) : camera(cam), light(light)
+ShaderProgram::ShaderProgram(Shader& vertex, Shader& fragment, Camera* cam, std::vector<Light*>* lights) : camera(cam), lights(lights)
 {   
     id = glCreateProgram();
 
@@ -25,7 +25,8 @@ ShaderProgram::ShaderProgram(Shader& vertex, Shader& fragment, Camera* cam, Ligh
 
     camera->attach(this);
     onNotify(ObservableSubjects::SCamera);
-    light->attach(this);
+	for (auto light : *lights)
+        light->attach(this);
     onNotify(ObservableSubjects::SLight);
 
 }   
@@ -89,7 +90,8 @@ void ShaderProgram::onNotify(ObservableSubjects source) {
         break;
     }
     case SLight: {
-        setUniform("lightPos", light->getPosition());
+        std::vector<Light*> l = *lights;
+        setUniform("lightPos", l[0]->getPosition());
         //std::cout << "Light updated: " << light->getPosition().y << std::endl;
         break;
     }
