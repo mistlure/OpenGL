@@ -1,10 +1,13 @@
 ﻿#pragma once
-#define GLFW_INCLUDE_NONE
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include "CameraController.h"
+// Forward-declare the Camera class
+class Camera;
 
-void setCameraController(CameraController* controller);
+// Sets the camera instance for all callbacks to use
+void setCameraCallbacks(Camera* cam);
 
+// --- Callback function declarations ---
 void error_callback(int error, const char* description);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void button_callback(GLFWwindow* window, int button, int action, int mods);

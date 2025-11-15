@@ -9,7 +9,10 @@
 #include "Shader.h"
 #include "Observer.h"
 #include "Camera.h"
+
 #include "Light.h"
+#include "PointLight.h"
+#include "Spotlight.h"
 
 #include <vector>
 #include <string>
@@ -17,11 +20,11 @@
 class ShaderProgram : public Observer
 {
 public:
-    ShaderProgram(const Shader& vertex, const Shader& fragment);
+    ShaderProgram(Shader& vertex, Shader& fragment, Camera* camera, std::vector<Light*>* lights);
     ~ShaderProgram();
 
-    void use() const;
-
+    void useProgram();
+    
     void setModelMatrix(const glm::mat4& matrix) const;
 
     void setUniform(const std::string& name, const glm::mat4& matrix) const;
@@ -29,12 +32,11 @@ public:
     void setUniform(const std::string& name, float value) const;
     void setUniform(const std::string& name, int value) const;
 
-    void onNotify(ObservableSubjects source, const void* subject) override;
+    void onNotify(ObservableSubjects source) override;
 
-    void setLightPosition(const glm::vec3& position);
-    void setLightPositions(const std::vector<glm::vec3>& positions);
-    void setLightAttenuations(const std::vector<glm::vec3>& values);
 
 private:
     GLuint id;
+	Camera* camera = nullptr;
+	std::vector<Light*>* lights= nullptr;
 };

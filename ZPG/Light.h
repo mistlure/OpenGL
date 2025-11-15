@@ -7,11 +7,11 @@
 class Light : public Subject
 {
 public:
-    Light(const glm::vec3& position);
-
-    void setPosition(const glm::vec3& pos);
-    const glm::vec3& getPosition() const;
-
+    Light(LightType type, const glm::vec3& color);
+    virtual ~Light() = 0;
+    glm::vec3 color;
+	LightType type;
+	bool isOn = true;
 private:
-    glm::vec3 position;
+
 };

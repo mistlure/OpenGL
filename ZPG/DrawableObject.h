@@ -8,19 +8,17 @@
 #pragma once
 #include "ShaderProgram.h"
 #include "Model.h"
-#include "Transformation.h"
 #include "Transform.h"
-
+#include "Light.h"
 class DrawableObject
 {
 public:
-    DrawableObject(ShaderProgram* shader, Model* model);
+    DrawableObject(const char* ShaderPair[2], Model* model, Camera* camera, std::vector<Light*>* lights);
     void draw();
 
-    //Transformation* transform = nullptr;
-    Transform* transform = nullptr;
+    Transform* transform = new Transform();
 
 private:
-    ShaderProgram* shader;
+    ShaderProgram* shaderProgram;
     Model* model;
 };

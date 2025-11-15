@@ -1,38 +1,34 @@
 ﻿#include "ShaderProgram.h"
 #include <iostream>
 
-// Constructor that links vertex and fragment shaders into a shader program
-ShaderProgram::ShaderProgram(const Shader& vertex, const Shader& fragment)
+ShaderProgram::ShaderProgram(Shader& vertex, Shader& fragment, Camera* cam, std::vector<Light*>* lights) : camera(cam), lights(lights)
 {   
-    // Create a new shader program object
     id = glCreateProgram();
 
-    // Attach the compiled vertex&fragment shaders to the program
-    // Safe access to internal shader ID
-    glAttachShader(id, vertex.id);
-    glAttachShader(id, fragment.id);
-    // Combine vertex + fragment into one executable
-    glLinkProgram(id);
-
-    // Check if the linking was successful
+    vertex.attachShader(id);
+    fragment.attachShader(id);
+    
     GLint success;
+
+    glLinkProgram(id);
     glGetProgramiv(id, GL_LINK_STATUS, &success);
 
-	// Failure test
     if (!success)
     {
         GLint logLength;
-        // Get the length of the error log
         glGetProgramiv(id, GL_INFO_LOG_LENGTH, &logLength);
-        // Allocate memory for the log
         char* log = new char[logLength];
-        // Retrieve the log content
         glGetProgramInfoLog(id, logLength, nullptr, log);
-        // Print the error log
         std::cerr << "Shader program linking failed:\n" << log << std::endl;
-        // Free the allocated memory
         delete[] log;
     }
+
+    camera->attach(this);
+    onNotify(ObservableSubjects::SCamera);
+	for (auto light : *lights)
+        light->attach(this);
+    onNotify(ObservableSubjects::SLight);
+
 }   
 
 ShaderProgram::~ShaderProgram()
@@ -40,30 +36,22 @@ ShaderProgram::~ShaderProgram()
     glDeleteProgram(id);
 }
 
-// Activate the shader program for rendering
-void ShaderProgram::use() const
+void ShaderProgram::useProgram()
 {
     glUseProgram(id);
 }
 
-// Bridge between C++ and GLSL that passes transformation data.
-// It's universal and will be used for every object.
 void ShaderProgram::setModelMatrix(const glm::mat4& matrix) const
 {
-	// Get the location of the "modelMatrix".
     GLint location = glGetUniformLocation(id, "modelMatrix");
-	// Location -1 means that the uniform variable was not found or is not used in the shader.
     if (location == -1)
     {
         std::cerr << "Uniform 'modelMatrix' not found!" << std::endl;
         return;
     }
-	// Upload the 4x4 matrix to the GPU.
     glUniformMatrix4fv(location, 1, GL_FALSE, &matrix[0][0]);
 }
 
-// Passes a 4x4 matrix to a uniform variable in the shader.
-// Use for transformations like model, view, projection.
 void ShaderProgram::setUniform(const std::string& name, const glm::mat4& matrix) const
 {
     GLint location = glGetUniformLocation(id, name.c_str());
@@ -71,8 +59,6 @@ void ShaderProgram::setUniform(const std::string& name, const glm::mat4& matrix)
         glUniformMatrix4fv(location, 1, GL_FALSE, &matrix[0][0]);
 }
 
-// Passes a vec3 to a uniform variable in the shader.
-// Use for colors, light directions, positions.
 void ShaderProgram::setUniform(const std::string& name, const glm::vec3& vector) const
 {
     GLint location = glGetUniformLocation(id, name.c_str());
@@ -80,8 +66,6 @@ void ShaderProgram::setUniform(const std::string& name, const glm::vec3& vector)
         glUniform3fv(location, 1, &vector[0]);
 }
 
-// Passes a float value to a uniform variable in the shader.
-// Use for time, animation speed, transparency, etc.
 void ShaderProgram::setUniform(const std::string& name, float value) const
 {
     GLint location = glGetUniformLocation(id, name.c_str());
@@ -89,8 +73,6 @@ void ShaderProgram::setUniform(const std::string& name, float value) const
         glUniform1f(location, value);
 }
 
-// Passes an integer value to a uniform variable in the shader.
-// Use for mode switching, flags, texture indices.
 void ShaderProgram::setUniform(const std::string& name, int value) const
 {
     GLint location = glGetUniformLocation(id, name.c_str());
@@ -98,50 +80,54 @@ void ShaderProgram::setUniform(const std::string& name, int value) const
         glUniform1i(location, value);
 }
 
-void ShaderProgram::onNotify(ObservableSubjects source, const void* subject) {
+void ShaderProgram::onNotify(ObservableSubjects source) {
+    useProgram();
+
     switch (source) {
     case SCamera: {
-        const Camera* cam = static_cast<const Camera*>(subject);
-        setUniform("viewMatrix", cam->getViewMatrix());
+        setUniform("viewMatrix", camera->getViewMatrix());
+        setUniform("projectMatrix", camera->getProjectionMatrix());
+        setUniform("viewPos", camera->getPosition());
         break;
     }
     case SLight: {
-        const Light* light = static_cast<const Light*>(subject);
-        setUniform("lightPos", light->getPosition());
-        //std::cout << "Light updated: " << light->getPosition().y << std::endl;
+        const auto& lightList = *lights;
+
+        setUniform("numberOfLights", static_cast<int>(lightList.size()));
+
+        for (size_t i = 0; i < lightList.size(); ++i)
+        {
+            Light* light = lightList[i];
+            std::string prefix = "lights[" + std::to_string(i) + "]";
+
+            // Base light properties
+            setUniform(prefix + ".type", static_cast<int>(light->type));
+            setUniform(prefix + ".color", light->color);
+            setUniform(prefix + ".isOn", light->isOn);
+
+            // PointLight specific
+            if (auto* point = dynamic_cast<PointLight*>(light))
+            {
+                setUniform(prefix + ".position", point->position);
+                setUniform(prefix + ".constant", point->constant);
+                setUniform(prefix + ".linear", point->linear);
+                setUniform(prefix + ".quadratic", point->quadratic);
+            }
+            else if (auto* point = dynamic_cast<SpotLight*>(light)) {
+                setUniform((prefix + ".position").c_str(), point->position);
+                setUniform((prefix + ".direction").c_str(), point->direction);
+                setUniform((prefix + ".cutOff").c_str(), point->cutOff);
+                setUniform((prefix + ".outerCutOff").c_str(), point->outerCutOff);
+                setUniform((prefix + ".constant").c_str(), 1.0f);
+                setUniform((prefix + ".linear").c_str(), 0.09f);
+                setUniform((prefix + ".quadratic").c_str(), 0.032f);
+            }
+            // TODO: if you add SpotLight or DirectionalLight, extend here
+            // if (auto* spot = dynamic_cast<SpotLight*>(light)) { ... }
+        }
+
         break;
     }
-    default:
-        break;
     }
-}
-
-// Sets the position of a single light source in the shader.
-void ShaderProgram::setLightPosition(const glm::vec3& position)
-{
-	setUniform("lightPos", position);
-}
-
-// Sets an array of light positions in the shader.
-void ShaderProgram::setLightPositions(const std::vector<glm::vec3>& positions)
-{
-    GLint location = glGetUniformLocation(id, "lightPositions");
-    if (location == -1)
-    {
-        std::cerr << "Uniform 'lightPositions' not found!" << std::endl;
-        return;
-    }
-    glUniform3fv(location, static_cast<GLsizei>(positions.size()), &positions[0][0]);
-}
-
-// Sets an array of light attenuation values in the shader.
-void ShaderProgram::setLightAttenuations(const std::vector<glm::vec3>& values)
-{
-    GLint location = glGetUniformLocation(id, "lightAttenuations");
-    if (location == -1)
-    {
-        std::cerr << "Uniform 'lightAttenuations' not found!" << std::endl;
-        return;
-    }
-    glUniform3fv(location, static_cast<GLsizei>(values.size()), &values[0][0]);
+    glUseProgram(0);
 }

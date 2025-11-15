@@ -2,37 +2,20 @@
 
 Model::Model(float* data, size_t size)
 {
-    // Generate VAO to store vertex attribute configuration
-    glGenVertexArrays(1, &vao);
-	// Generate VBO to store vertex data in GPU memory
-    glGenBuffers(1, &vbo);
-
-
+    glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
 
     // Bind the VAO
-    // This stores the vertex attribute configuration
-    glBindVertexArray(vao);
+    glBindVertexArray(VAO);
 	// Bind the VBO
-    // This holds the actual vertex data
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
     // Upload the vertex data to the GPU
-    // 'size' is the total byte size, 'data' is the pointer to the vertex array
     glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
 
-
-
-    // Enable vertex attribute at location 0
-    // This is typically used for vertex positions (vec3)
     glEnableVertexAttribArray(0);
-
-    // Define how attribute 0 is laid out in the buffer
-    // It reads 3 floats starting at offset 0, with a stride of 6 floats per vertex
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid*)0);
 
 
-
-    // Enable vertex attribute at location 1
-    // This is typically used for normals or colors (vec3)
     glEnableVertexAttribArray(1);
     // Define how attribute 1 is laid out in the buffer
     // It reads 3 floats starting at offset 3 * sizeof(float), same stride
@@ -86,14 +69,13 @@ Model::Model(const char* name)
         }
     }
 
-    GLuint VBO = 0;
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
     vertexCount = static_cast<int>(vertices.size() / 8);
 
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(1);
@@ -104,24 +86,12 @@ Model::Model(const char* name)
 
 Model::~Model()
 {
-    glDeleteBuffers(1, &vbo);
-    glDeleteVertexArrays(1, &vao);
+    glDeleteBuffers(1, &VBO);
+    glDeleteVertexArrays(1, &VAO);
 }
 
 // Binds the model's VAO for rendering
 void Model::bind() const
 {
-    glBindVertexArray(vao);
-}
-
-// Unbinds any VAO to prevent accidental modification
-void Model::unbind() const
-{
-    glBindVertexArray(0);
-}
-
-// Draws the model using the stored vertex count
-void Model::draw() const
-{
-    glDrawArrays(GL_TRIANGLES, 0, vertexCount);
+    glBindVertexArray(VAO);
 }

@@ -1,0 +1,236 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Models">
+      <UniqueIdentifier>{c8c175f8-92d8-4ea3-8b73-e017e77b792e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ObserverPattern">
+      <UniqueIdentifier>{f447ffaf-a887-46ff-bd6b-78ec152ec8b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Transofrmations">
+      <UniqueIdentifier>{56b77139-bef8-42cd-af67-d5139fc8e3fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Object">
+      <UniqueIdentifier>{c3255ebc-6820-4300-862f-f0381dc56379}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Camera">
+      <UniqueIdentifier>{3ecb9392-cba4-42f9-a508-94c19ace20f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Model">
+      <UniqueIdentifier>{b7fdd6ee-baaa-4edb-a44d-a6f90ae2c89c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Application">
+      <UniqueIdentifier>{65133566-32d4-4af3-bbb8-ce815476f89c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Shader">
+      <UniqueIdentifier>{fe78562b-470e-42e8-8b70-186ec3c986b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Lights">
+      <UniqueIdentifier>{c11f2b77-8f88-43d2-b8f1-470e17d88ce7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Scene">
+      <UniqueIdentifier>{11e49aac-e4be-4c52-88c8-591c780c97e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ShaderPrograms">
+      <UniqueIdentifier>{4bf6fc60-b7af-48ea-9beb-1e20102d3157}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ZPG.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TreeData.cpp">
+      <Filter>Models</Filter>
+    </ClCompile>
+    <ClCompile Include="BushData.cpp">
+      <Filter>Models</Filter>
+    </ClCompile>
+    <ClCompile Include="SphereData.cpp">
+      <Filter>Models</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Libraries\tinyobjloader\tiny_obj_loader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Source Files\Transofrmations</Filter>
+    </ClCompile>
+    <ClCompile Include="Translate.cpp">
+      <Filter>Source Files\Transofrmations</Filter>
+    </ClCompile>
+    <ClCompile Include="Rotate.cpp">
+      <Filter>Source Files\Transofrmations</Filter>
+    </ClCompile>
+    <ClCompile Include="Scale.cpp">
+      <Filter>Source Files\Transofrmations</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawableObject.cpp">
+      <Filter>Source Files\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamicRotate.cpp">
+      <Filter>Source Files\Transofrmations</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Callbacks.cpp">
+      <Filter>Source Files\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Application.cpp">
+      <Filter>Source Files\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderProgram.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Source Files\Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene1.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderParis.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLight.cpp">
+      <Filter>Source Files\Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="Spotlight.cpp">
+      <Filter>Source Files\Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="HeadLight.cpp">
+      <Filter>Source Files\Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene2.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Callbacks.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderProgram.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawableObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BushData.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="SphereData.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="TreeData.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Rotate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Translate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scale.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicRotate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EnumLightType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EnumObservableSubjects.h">
+      <Filter>Source Files\ObserverPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="Observer.h">
+      <Filter>Source Files\ObserverPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="Subject.h">
+      <Filter>Source Files\ObserverPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformBase.h">
+      <Filter>Source Files\Transofrmations</Filter>
+    </ClInclude>
+    <ClInclude Include="tiny_obj_loader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderPairs.h">
+      <Filter>Source Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spotlight.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HeadLight.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\fragment.glsl">
+      <Filter>ShaderPrograms</Filter>
+    </None>
+    <None Include="shaders\fragment_constant.glsl">
+      <Filter>ShaderPrograms</Filter>
+    </None>
+    <None Include="shaders\fragment_lambert.glsl">
+      <Filter>ShaderPrograms</Filter>
+    </None>
+    <None Include="shaders\fragment_multiLight.glsl">
+      <Filter>ShaderPrograms</Filter>
+    </None>
+    <None Include="shaders\fragment_phong.glsl">
+      <Filter>ShaderPrograms</Filter>
+    </None>
+    <None Include="shaders\vertex.glsl">
+      <Filter>ShaderPrograms</Filter>
+    </None>
+  </ItemGroup>
+</Project>

@@ -1,17 +1,24 @@
 #include "DrawableObject.h"
 
-DrawableObject::DrawableObject(ShaderProgram* shader, Model* model)
-    : shader(shader), model(model) {
+DrawableObject::DrawableObject(const char* ShaderPair[2], Model* model, Camera* camera, std::vector<Light*>* lights)
+    : model(model) {
+    Shader vertexShader(GL_VERTEX_SHADER, ShaderPair[0]);
+    Shader fragmentShader(GL_FRAGMENT_SHADER, ShaderPair[1]);
+    shaderProgram = new ShaderProgram(vertexShader, fragmentShader, camera, lights);
+
 }
 
 void DrawableObject::draw()
 {
-    // Activate the shader program
-    shader->use();
-    // Bind the model's VAO
+    shaderProgram->useProgram();
+
+	// set transform matrix
+    shaderProgram->setUniform("modelMatrix", transform->getMatrix());
+   
     model->bind();
-    if (transform)
-        shader->setModelMatrix(transform->getMatrix());
-    // Draw call
-    model->draw();
+
+    glDrawArrays(GL_TRIANGLES, 0, model->getVertexCount()); 
+
+    glBindVertexArray(0);
+    glUseProgram(0);
 }

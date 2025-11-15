@@ -12,9 +12,6 @@
 #include "Scene.h"
 #include "Camera.h"
 #include "Light.h"
-#include "Transformation.h"
-#include "CameraController.h"
-#include "SceneManager.h"
 #include "Transform.h"
 
 #include "EnumLightType.h"
@@ -22,7 +19,8 @@
 class Application {
 public:
     void run();
-
+    void switchScene(int index);
+	Scene* getCurrentScene() { return currentScene; }
 private:
     void initGLFW();
     void initWindow();
@@ -32,26 +30,8 @@ private:
     void cleanup();
 
     GLFWwindow* window = nullptr;
-    ShaderProgram* shaderProgram = nullptr;
-
     float ratio = 1.0f;
-
-    Camera camera;
-    Light* light = nullptr;
-
-
-    CameraController cameraController;
-
+   
     std::vector<Scene*> scenes;
-    int currentSceneIndex = 0;
-
-    Transform* rotatingTriangle;
-    Transform* sun;
-    Transform* earth;
-    Transform* moon;
-    std::vector<Transform*> fireflyTransforms;
-
-
-    std::vector<glm::vec3> lightPositions;
-    std::vector<glm::vec3> lightAttenuations;
+    Scene* currentScene;
 };

@@ -1,4 +1,9 @@
 #include "Scene.h"
+#include "HeadLight.h"
+Scene::Scene()
+{
+	addLight(headLight);
+}
 
 // Adds a DrawableObject to the scene
 void Scene::addObject(DrawableObject* obj)
@@ -8,16 +13,26 @@ void Scene::addObject(DrawableObject* obj)
 }
 
 // Draws all objects in the scene
-void Scene::drawAll() const
+void Scene::drawAll()
 {
-    for (auto obj : objects)
+    for (auto& obj : objects)
     {
         obj->draw();
     }
 }
 
-// Clears all objects from the scene
-void Scene::clear()
-{
-    objects.clear();
+
+Light* Scene::addLight(Light* light) {
+	if (lights.size() >= MAX_LIGHTS) {
+		std::cerr << "Cannot add more lights, maximum reached: " << MAX_LIGHTS << std::endl;
+		delete light;
+		return nullptr;
+	}
+	lights.push_back(light);
+	return light;
+}
+
+void Scene::switchHeadLight() {
+	headLight->isOn = !headLight->isOn;
+	headLight->notify(ObservableSubjects::SLight);
 }

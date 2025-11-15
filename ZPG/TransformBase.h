@@ -5,5 +5,4 @@ class TransformBase
 {
 public:
     virtual glm::mat4 getMatrix() = 0;
-    virtual ~TransformBase() = default;
 };
