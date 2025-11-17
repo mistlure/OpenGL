@@ -60,9 +60,6 @@
     <ClCompile Include="SphereData.cpp">
       <Filter>Models</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Libraries\tinyobjloader\tiny_obj_loader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Transform.cpp">
       <Filter>Source Files\Transofrmations</Filter>
     </ClCompile>
@@ -108,7 +105,7 @@
     <ClCompile Include="Scene1.cpp">
       <Filter>Source Files\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="ShaderParis.cpp">
+    <ClCompile Include="ShaderPairs.cpp">
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
     <ClCompile Include="PointLight.cpp">
@@ -122,6 +119,9 @@
     </ClCompile>
     <ClCompile Include="Scene2.cpp">
       <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -212,6 +212,9 @@
     <ClInclude Include="Scene2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\fragment.glsl">
@@ -230,6 +233,12 @@
       <Filter>ShaderPrograms</Filter>
     </None>
     <None Include="shaders\vertex.glsl">
+      <Filter>ShaderPrograms</Filter>
+    </None>
+    <None Include="shaders\fragment_phongTextured.glsl">
+      <Filter>ShaderPrograms</Filter>
+    </None>
+    <None Include="shaders\vertexTextured.glsl">
       <Filter>ShaderPrograms</Filter>
     </None>
   </ItemGroup>

@@ -1,28 +1,41 @@
 ﻿#include "Model.h"
+#define TINYOBJLOADER_IMPLEMENTATION
+#include "tiny_obj_loader.h"
 
-Model::Model(float* data, size_t size)
+Model::Model(float* data, size_t size, bool isTextured)
 {
     glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
+    glGenBuffers(1, &VBO);
 
-    // Bind the VAO
     glBindVertexArray(VAO);
-	// Bind the VBO
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    // Upload the vertex data to the GPU
     glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
 
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid*)0);
+    if (isTextured) {
+        // stride = 8
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (GLvoid*)0);
 
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (GLvoid*)(3 * sizeof(float)));
 
-    glEnableVertexAttribArray(1);
-    // Define how attribute 1 is laid out in the buffer
-    // It reads 3 floats starting at offset 3 * sizeof(float), same stride
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid*)(3 * sizeof(float)));
+        glEnableVertexAttribArray(2);
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (GLvoid*)(6 * sizeof(float)));
 
-    vertexCount = size / (6 * sizeof(float));
+        vertexCount = static_cast<int>(size / (8 * sizeof(float)));
+    }
+    else {
+        // stride = 6
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid*)0);
+
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid*)(3 * sizeof(float)));
+
+        vertexCount = static_cast<int>(size / (6 * sizeof(float)));
+    }
 }
+
 
 Model::Model(const char* name)
 {
@@ -34,19 +47,19 @@ Model::Model(const char* name)
     std::string warn, err;
 
     bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, inputfile.c_str(), "assets/");
-
     if (!warn.empty()) std::cout << "Warn: " << warn << std::endl;
     if (!err.empty()) std::cerr << "Err: " << err << std::endl;
     if (!ret) throw std::runtime_error("Failed to load OBJ file!");
 
     std::vector<float> vertices;
-
     for (const auto& shape : shapes) {
         for (const auto& index : shape.mesh.indices) {
+            // позиция
             vertices.push_back(attrib.vertices[3 * index.vertex_index + 0]);
             vertices.push_back(attrib.vertices[3 * index.vertex_index + 1]);
             vertices.push_back(attrib.vertices[3 * index.vertex_index + 2]);
 
+            // нормаль
             if (index.normal_index >= 0) {
                 vertices.push_back(attrib.normals[3 * index.normal_index + 0]);
                 vertices.push_back(attrib.normals[3 * index.normal_index + 1]);
@@ -58,6 +71,7 @@ Model::Model(const char* name)
                 vertices.push_back(0.0f);
             }
 
+            // uv
             if (index.texcoord_index >= 0) {
                 vertices.push_back(attrib.texcoords[2 * index.texcoord_index + 0]);
                 vertices.push_back(attrib.texcoords[2 * index.texcoord_index + 1]);
@@ -76,13 +90,20 @@ Model::Model(const char* name)
 
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
+
+    // Позиция
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+
+    // Нормаль
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+
+    // UV
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 }
+
 
 Model::~Model()
 {

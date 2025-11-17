@@ -15,7 +15,7 @@
 class Model
 {
 public:
-    Model(float* data, size_t size);
+    Model(float* data, size_t size, bool isTextured);
     Model(const char* filename);
     ~Model();
 

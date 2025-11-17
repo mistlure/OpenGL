@@ -11,14 +11,21 @@ DrawableObject::DrawableObject(const char* ShaderPair[2], Model* model, Camera* 
 void DrawableObject::draw()
 {
     shaderProgram->useProgram();
-
-	// set transform matrix
     shaderProgram->setUniform("modelMatrix", transform->getMatrix());
-   
-    model->bind();
 
-    glDrawArrays(GL_TRIANGLES, 0, model->getVertexCount()); 
+    if (useTexture && texture) {
+        texture->bind(0);
+        shaderProgram->setUniform("textureUnitID", 0);
+        shaderProgram->setUniform("useTexture", 1);
+    }
+    else {
+        shaderProgram->setUniform("useTexture", 0);
+    }
+
+    model->bind();
+    glDrawArrays(GL_TRIANGLES, 0, model->getVertexCount());
 
     glBindVertexArray(0);
     glUseProgram(0);
 }
+

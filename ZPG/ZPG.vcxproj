@@ -108,7 +108,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>E:\OpenGL\Libraries\tinyobjloader;..\..\Libraries\glfw-3.4.bin.WIN64\include;..\..\Libraries\glm-master;..\..\Libraries\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\OpenGL\Libraries\stb;E:\OpenGL\Libraries\tinyobjloader;..\..\Libraries\glfw-3.4.bin.WIN64\include;..\..\Libraries\glm-master;..\..\Libraries\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -125,7 +125,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>E:\OpenGL\Libraries\tinyobjloader;..\..\Libraries\glfw-3.4.bin.WIN64\include;..\..\Libraries\glm-master;..\..\Libraries\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\OpenGL\Libraries\stb;E:\OpenGL\Libraries\tinyobjloader;..\..\Libraries\glfw-3.4.bin.WIN64\include;..\..\Libraries\glm-master;..\..\Libraries\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -135,7 +135,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Libraries\tinyobjloader\tiny_obj_loader.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="BushData.cpp" />
     <ClCompile Include="Callbacks.cpp" />
@@ -152,10 +151,11 @@
     <ClCompile Include="Scene1.cpp" />
     <ClCompile Include="Scene2.cpp" />
     <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="ShaderParis.cpp" />
+    <ClCompile Include="ShaderPairs.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="SphereData.cpp" />
     <ClCompile Include="Spotlight.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Translate.cpp" />
     <ClCompile Include="TreeData.cpp" />
@@ -186,6 +186,7 @@
     <ClInclude Include="SphereData.h" />
     <ClInclude Include="Spotlight.h" />
     <ClInclude Include="Subject.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="tiny_obj_loader.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="TransformBase.h" />
@@ -198,7 +199,9 @@
     <None Include="shaders\fragment_lambert.glsl" />
     <None Include="shaders\fragment_multiLight.glsl" />
     <None Include="shaders\fragment_phong.glsl" />
+    <None Include="shaders\fragment_phongTextured.glsl" />
     <None Include="shaders\vertex.glsl" />
+    <None Include="shaders\vertexTextured.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

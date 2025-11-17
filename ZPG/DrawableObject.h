@@ -10,11 +10,15 @@
 #include "Model.h"
 #include "Transform.h"
 #include "Light.h"
+#include "Texture.h"
 class DrawableObject
 {
 public:
     DrawableObject(const char* ShaderPair[2], Model* model, Camera* camera, std::vector<Light*>* lights);
     void draw();
+
+    Texture* texture = nullptr;
+    bool useTexture = false;
 
     Transform* transform = new Transform();
 
